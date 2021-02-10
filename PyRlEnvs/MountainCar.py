@@ -1,6 +1,6 @@
 import numpy as np
 from numba import njit
-from RlGlue import BaseEnvironment
+from PyRlEnvs.BaseEnvironment import BaseEnvironment
 
 @njit(cache=True)
 def _nextState(s, a):
