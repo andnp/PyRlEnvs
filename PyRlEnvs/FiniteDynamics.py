@@ -41,7 +41,7 @@ def _averageReward(K, Rs, pi):
 
 @njit(cache=True)
 def _stateDistribution(P):
-    return np.linalg.matrix_power(P, 1000).mean(axis=0)
+    return np.linalg.matrix_power(P, 1024).mean(axis=0)
 
 class FiniteDynamics(BaseEnvironment):
     # start state dist
