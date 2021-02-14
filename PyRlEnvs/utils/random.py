@@ -3,12 +3,11 @@ import numpy as np
 from numba import njit
 
 T = TypeVar('T')
-AnyNumber = Union[float, int]
-NpList = Union[np.ndarray, Sequence[AnyNumber]]
+NpArray = Union[Sequence[float], np.ndarray]
 
 # we can speed this up if we abstract away from the rng
 @njit(cache=True)
-def _sample(arr, r):
+def _sample(arr: NpArray, r: float) -> int:
     s = 0
     for i, p in enumerate(arr):
         s += p
@@ -21,10 +20,10 @@ def _sample(arr, r):
 
 # way faster than np.random.choice
 # arr is an array of probabilities, should sum to 1
-def sample(arr: NpList, rng: Any = np.random):
+def sample(arr: NpArray, rng: Any = np.random) -> int:
     # if we can avoid incrementing the rng, do so
     if len(arr) == 1:
-        return arr[0]
+        return 0
 
     r = rng.random()
     return _sample(arr, r)

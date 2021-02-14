@@ -17,21 +17,40 @@ Bp = 2
 
 def _buildTransitionKernel():
     K = np.zeros((3, 2, 3))
-    K[A, B, LEFT] = 1
-    K[A, Bp, RIGHT] = 1
-    K[B, A] = 1
-    K[Bp, B, LEFT] = 1
-    K[Bp, Bp, RIGHT] = 1
+    K[A, LEFT, B] = 1
+    K[A, RIGHT, Bp] = 1
+    K[B, :, A] = 1
+    K[Bp, LEFT, B] = 1
+    K[Bp, RIGHT, Bp] = 1
 
     return K
 
-class BECounterexample(FiniteDynamics):
-    K = _buildTransitionKernel()
-    Rs = np.array([
-        [0., 0.],
-        [1., 0.],
-        [-1, -1],
-    ])
+def _buildRewardKernel():
+    R = np.zeros((3, 2, 3))
+    R[B, :, A] = 1
+    R[Bp, LEFT, B] = -1
+    R[Bp, RIGHT, Bp] = -1
 
-    T = np.array([0, 0, 1])
+    return R
+
+class BECounterexample(FiniteDynamics):
+    num_states = 3
+    num_actions = 2
+
+    K = _buildTransitionKernel()
+    Rs = _buildRewardKernel()
+
+    T = np.zeros((3, 2, 3))
     d0 = np.array([1., 0, 0])
+
+# some utility functions to encode other important parts of the problem spec
+# not necessarily environment specific, but this is as good a place as any to store them
+def behaviorPolicy(s):
+    return np.array([0.5, 0.5])
+
+def representationMatrix():
+    return np.array([
+        [1., 0],
+        [0, 1],
+        [0, 1],
+    ])

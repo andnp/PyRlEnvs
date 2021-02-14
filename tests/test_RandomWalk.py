@@ -11,13 +11,13 @@ class TestRandomWalk(unittest.TestCase):
 
     def test_nextStates(self):
         sps = RandomWalk.nextStates(0, 0)
-        self.assertListEqual(sps, [2])
+        self.assertListEqual(list(sps), [2])
 
         sps = RandomWalk.nextStates(2, 1)
-        self.assertListEqual(sps, [3])
+        self.assertListEqual(list(sps), [3])
 
         sps = RandomWalk.nextStates(4, 1)
-        self.assertListEqual(sps, [2])
+        self.assertListEqual(list(sps), [2])
 
     def test_reward(self):
         r = RandomWalk.reward(3, 0, 2)

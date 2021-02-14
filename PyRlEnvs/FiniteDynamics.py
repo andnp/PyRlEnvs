@@ -11,14 +11,15 @@ def _actions(K, s: int):
 
 @njit(cache=True)
 def _nextStates(K, s: int, a: int):
-    return [sp[0] for sp in np.where(K[s, a, :] != 0)]
+    return np.where(K[s, a] > 0)[0]
 
 @njit(cache=True)
 def _transitionMatrix(K, T, pi, gamma):
     states = pi.shape[0]
     P = np.zeros((states, states))
     G = 1 - T
-    if gamma == 1:
+    if gamma < 0:
+        gamma = 1
         G = np.ones_like(G)
 
     for s in range(states):
@@ -81,7 +82,7 @@ class FiniteDynamics(BaseEnvironment):
     @classmethod
     def constructTransitionMatrix(cls, policy: Callable[[int], np.ndarray], gamma=None):
         if gamma is None:
-            gamma = 1
+            gamma = -1
 
         states = cls.num_states
         pi = np.array([ policy(s) for s in range(states) ])

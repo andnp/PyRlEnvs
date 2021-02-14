@@ -65,3 +65,36 @@ def buildRandomWalk(states):
 
 # a default class, just for consistency
 RandomWalk = buildRandomWalk(5)
+
+# some utility functions to encode other important parts of the problem spec
+# not necessarily environment specific, but this is as good a place as any to store them
+def _normRows(m):
+    n = m.shape[0]
+    return (m[:n].T / np.linalg.norm(m[:n], axis=1)).T
+
+"""
+Feature representations used in
+TODO: cite <Sutton et al. 2009>
+"""
+def invertedFeatures(n):
+    I = np.eye(n)
+    m = 1 - I
+    return _normRows(m)
+
+def dependentFeatures(n):
+    nfeats = int(np.floor(n/2) + 1)
+    m = np.zeros((n + 1, nfeats))
+
+    idx = 0
+    for i in range(nfeats):
+        m[idx, 0:i+1] = 1
+        idx += 1
+
+    for i in range(nfeats-1, 0, -1):
+        m[idx, -i:] = 1
+        idx += 1
+
+    return _normRows(m)
+
+def tabularFeatures(n):
+    return np.eye(n)
