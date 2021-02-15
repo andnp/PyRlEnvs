@@ -10,7 +10,7 @@ setup(
         "numpy>=1.19.5",
         "numba>=0.52.0",
     ],
-    version=0.2,
+    version=0.3,
     license='MIT',
     description='A handful of fast environments for running RL experiments',
     long_description='todo',
