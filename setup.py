@@ -9,6 +9,7 @@ setup(
     install_requires=[
         "numpy>=1.19.5",
         "numba>=0.52.0",
+        "RlGlue @ git+ssh://git@github.com/andnp/RlGlue@0.2",
     ],
     version=0.5,
     license='MIT',
