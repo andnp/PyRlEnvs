@@ -69,8 +69,7 @@ RandomWalk = buildRandomWalk(5)
 # some utility functions to encode other important parts of the problem spec
 # not necessarily environment specific, but this is as good a place as any to store them
 def _normRows(m):
-    n = m.shape[0]
-    return (m[:n].T / np.linalg.norm(m[:n], axis=1)).T
+    return (m.T / np.linalg.norm(m, axis=1)).T
 
 """
 Feature representations used in
@@ -83,7 +82,7 @@ def invertedFeatures(n):
 
 def dependentFeatures(n):
     nfeats = int(np.floor(n/2) + 1)
-    m = np.zeros((n + 1, nfeats))
+    m = np.zeros((n, nfeats))
 
     idx = 0
     for i in range(nfeats):
