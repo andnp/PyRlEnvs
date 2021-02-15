@@ -105,3 +105,11 @@ class TestRandomWalk(unittest.TestCase):
         expected = np.array([-0.25, 0, 0, 0, 0.75])
 
         self.assertTrue(np.allclose(R, expected))
+
+    def test_stateDist(self):
+        policy = lambda s: np.array([.5, .5])
+
+        d = RandomWalk.computeStateDistribution(policy)
+        expected = np.array([1, 2, 3, 2, 1]) / 9
+
+        self.assertTrue(np.allclose(d, expected))
