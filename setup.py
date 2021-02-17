@@ -11,7 +11,7 @@ setup(
         "numba>=0.52.0",
         "RlGlue @ git+ssh://git@github.com/andnp/RlGlue@0.2",
     ],
-    version=0.7,
+    version=0.8,
     license='MIT',
     description='A handful of fast environments for running RL experiments',
     long_description='todo',
