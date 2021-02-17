@@ -69,7 +69,8 @@ class WallState(Element):
         return sp == self.sp
 
     def apply(self, s: int, a: int, sp: int, d0: np.ndarray, K: np.ndarray, T: np.ndarray, R: np.ndarray):
+        d0[sp] = 0
         K[s, a, s] = 1
         R[s, a, s] = R[s, a, sp]
-        K[s, a, sp] = 0
-        R[s, a, sp] = 0
+        K[:, :, sp] = 0
+        R[:, :, sp] = 0

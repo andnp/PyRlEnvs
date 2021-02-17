@@ -13,7 +13,7 @@ def getCoords(state: int, shape: Coords) -> Coords:
 
 def findFirstTrigger(arr: Sequence[Any], s: int, a: int, sp: int):
     for element in arr:
-        if element.trigger(s, a, sp):
+        if element.trigger(s, a, sp) and element.name:
             return element
 
     return None

@@ -25,6 +25,9 @@ class GridWorldBuilder:
             if element.trigger(s, a, sp):
                 element.apply(s, a, sp, d0, K, T, R)
 
+    def build(self):
+        return buildGridWorld(self)
+
 def buildGridWorld(builder: GridWorldBuilder):
     width, height = builder.shape
     states = width * height
