@@ -45,7 +45,7 @@ class BECounterexample(FiniteDynamics):
 
 # some utility functions to encode other important parts of the problem spec
 # not necessarily environment specific, but this is as good a place as any to store them
-def behaviorPolicy(s):
+def behaviorPolicy(s: int):
     return np.array([0.5, 0.5])
 
 def representationMatrix():

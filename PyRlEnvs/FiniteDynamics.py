@@ -1,35 +1,35 @@
 from abc import abstractmethod
-from typing import Callable
+from typing import Callable, Optional
 import numpy as np
 from numba import njit
 from PyRlEnvs.BaseEnvironment import BaseEnvironment
 from PyRlEnvs.utils.random import sample
 
 @njit(cache=True)
-def _actions(K, s: int):
+def _actions(K: np.ndarray, s: int):
     return np.unique(np.where(K[s] != 0)[0])
 
 @njit(cache=True)
-def _nextStates(K, s: int, a: int):
+def _nextStates(K: np.ndarray, s: int, a: int):
     return np.where(K[s, a] > 0)[0]
 
 @njit(cache=True)
-def _transitionMatrix(K, T, pi, gamma):
+def _transitionMatrix(K: np.ndarray, T: np.ndarray, pi: np.ndarray, gamma: float):
     states = pi.shape[0]
     P = np.zeros((states, states))
-    G = 1 - T
+
+    g: np.ndarray = (1 - T) * gamma
     if gamma < 0:
-        gamma = 1
-        G = np.ones_like(G)
+        g = np.ones_like(T)
 
     for s in range(states):
         for sp in range(states):
-            P[s, sp] = np.sum(K[s, :, sp] * pi[s] * G[s, :, sp]) * gamma
+            P[s, sp] = np.sum(K[s, :, sp] * pi[s] * g[s, :, sp])
 
     return P
 
 @njit(cache=True)
-def _averageReward(K, Rs, pi):
+def _averageReward(K: np.ndarray, Rs: np.ndarray, pi: np.ndarray):
     states = pi.shape[0]
 
     R = np.zeros(states)
@@ -40,7 +40,7 @@ def _averageReward(K, Rs, pi):
     return R
 
 @njit(cache=True)
-def _stateDistribution(P):
+def _stateDistribution(P: np.ndarray):
     return np.linalg.matrix_power(P, 1024).sum(axis=0) / P.shape[0]
 
 class FiniteDynamics(BaseEnvironment):
@@ -80,7 +80,7 @@ class FiniteDynamics(BaseEnvironment):
         return bool(cls.T[s, a, sp])
 
     @classmethod
-    def constructTransitionMatrix(cls, policy: Callable[[int], np.ndarray], gamma=None):
+    def constructTransitionMatrix(cls, policy: Callable[[int], np.ndarray], gamma: Optional[float] = None):
         if gamma is None:
             gamma = -1
 
@@ -105,20 +105,29 @@ class FiniteDynamics(BaseEnvironment):
         super().__init__()
 
         self.rng = np.random.RandomState(seed)
-        self.state = 0
+        self.state: int = 0
 
     @abstractmethod
     def start(self):
         self.state = sample(self.d0, self.rng)
         return self.state
 
-    def step(self, a: int):
-        p_sp = self.K[self.state, a]
+    def step(self, action: int):
+        p_sp = self.K[self.state, action]
         sp = sample(p_sp, self.rng)
 
-        r = self.reward(self.state, a, sp)
-        t = self.terminal(self.state, a, sp)
+        r = self.reward(self.state, action, sp)
+        t = self.terminal(self.state, action, sp)
 
         self.state = sp
 
         return (r, self.state, t)
+
+    def setState(self, state: int):
+        self.state = state
+
+    def copy(self, seed: int):
+        c = self.__class__(seed)
+        c.state = self.state
+
+        return c

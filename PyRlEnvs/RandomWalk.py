@@ -4,7 +4,7 @@ from PyRlEnvs.FiniteDynamics import FiniteDynamics
 LEFT = 0
 RIGHT = 1
 
-def _buildTransitionKernel(states):
+def _buildTransitionKernel(states: int):
     K = np.zeros((states, 2, states))
 
     mid = int(states // 2)
@@ -15,17 +15,17 @@ def _buildTransitionKernel(states):
     K[0, RIGHT, 1] = 1
 
     # handle right side
-    K[last, LEFT, last-1] = 1
+    K[last, LEFT, last - 1] = 1
     K[last, RIGHT, mid] = 1
 
     # handle rest
     for s in range(1, last, 1):
-        K[s, LEFT, s-1] = 1
-        K[s, RIGHT, s+1] = 1
+        K[s, LEFT, s - 1] = 1
+        K[s, RIGHT, s + 1] = 1
 
     return K
 
-def _buildRewardKernel(states):
+def _buildRewardKernel(states: int):
     Rs = np.zeros((states, 2, states))
 
     last = states - 1
@@ -35,7 +35,7 @@ def _buildRewardKernel(states):
 
     return Rs
 
-def _buildTerminationKernel(states):
+def _buildTerminationKernel(states: int):
     T = np.zeros((states, 2, states))
 
     last = states - 1
@@ -45,13 +45,13 @@ def _buildTerminationKernel(states):
 
     return T
 
-def _buildStartStateDist(states):
+def _buildStartStateDist(states: int):
     d0 = np.zeros(states)
-    d0[int(states//2)] = 1
+    d0[int(states // 2)] = 1
 
     return d0
 
-def buildRandomWalk(states):
+def buildRandomWalk(states: int):
     class RandomWalk(FiniteDynamics):
         K = _buildTransitionKernel(states)
         Rs = _buildRewardKernel(states)
@@ -63,37 +63,40 @@ def buildRandomWalk(states):
 
     return RandomWalk
 
+
 # a default class, just for consistency
 RandomWalk = buildRandomWalk(5)
 
+
 # some utility functions to encode other important parts of the problem spec
 # not necessarily environment specific, but this is as good a place as any to store them
-def _normRows(m):
+def _normRows(m: np.ndarray):
     return (m.T / np.linalg.norm(m, axis=1)).T
+
 
 """
 Feature representations used in
 TODO: cite <Sutton et al. 2009>
 """
-def invertedFeatures(n):
+def invertedFeatures(n: int):
     I = np.eye(n)
     m = 1 - I
     return _normRows(m)
 
-def dependentFeatures(n):
-    nfeats = int(np.floor(n/2) + 1)
+def dependentFeatures(n: int):
+    nfeats = int(np.floor(n / 2) + 1)
     m = np.zeros((n, nfeats))
 
     idx = 0
     for i in range(nfeats):
-        m[idx, 0:i+1] = 1
+        m[idx, 0: i + 1] = 1
         idx += 1
 
-    for i in range(nfeats-1, 0, -1):
+    for i in range(nfeats - 1, 0, -1):
         m[idx, -i:] = 1
         idx += 1
 
     return _normRows(m)
 
-def tabularFeatures(n):
+def tabularFeatures(n: int):
     return np.eye(n)

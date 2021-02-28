@@ -12,7 +12,7 @@ IN = 1
 
 def _buildTransitionKernel():
     K = np.zeros((7, 2, 7))
-    K[:, OUT, :6] = 1/6
+    K[:, OUT, :6] = 1 / 6
     K[:, IN, 6] = 1
 
     return K
@@ -29,10 +29,10 @@ class BairdCounterexample(FiniteDynamics):
 
 # some utility functions to encode other important parts of the problem spec
 # not necessarily environment specific, but this is as good a place as any to store them
-def behaviorPolicy(s):
-    return np.array([6/7, 1/7])
+def behaviorPolicy(s: int):
+    return np.array([6 / 7, 1 / 7])
 
-def targetPolicy(s):
+def targetPolicy(s: int):
     return np.array([0, 1.])
 
 def representationMatrix():

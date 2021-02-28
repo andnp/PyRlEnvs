@@ -3,11 +3,12 @@ from numba import njit
 from PyRlEnvs.BaseEnvironment import BaseEnvironment
 
 @njit(cache=True)
-def _nextState(s, a):
+def _nextState(s: np.ndarray, a: int):
     a = a - 1
-    p, v = s
+    p: float = s[0]
+    v: float = s[1]
 
-    v += 0.001 * a - 0.0025 * np.cos(3 * p)
+    v = v + 0.001 * a - 0.0025 * np.cos(3 * p)
 
     if v < -0.07:
         v = -0.07
@@ -26,19 +27,19 @@ def _nextState(s, a):
 
 class MountainCar(BaseEnvironment):
     @staticmethod
-    def nextStates(s, a):
+    def nextStates(s: np.ndarray, a: int):
         return [_nextState(s, a)]
 
     @staticmethod
-    def actions(s):
+    def actions(s: np.ndarray):
         return [0, 1, 2]
 
     @staticmethod
-    def reward(s, a, sp):
+    def reward(s: np.ndarray, a: int, sp: np.ndarray):
         return -1
 
     @staticmethod
-    def terminal(s, a, sp):
+    def terminal(s: np.ndarray, a: int, sp: np.ndarray):
         p, _ = sp
 
         return p >= 0.5
@@ -58,12 +59,20 @@ class MountainCar(BaseEnvironment):
 
         return start
 
-    def step(self, a):
+    def step(self, action: int):
         # deterministic next state, so no need to sample
-        sp = MountainCar.nextStates(self._state, a)[0]
-        r = MountainCar.reward(self._state, a, sp)
-        t = MountainCar.terminal(self._state, a, sp)
+        sp = MountainCar.nextStates(self._state, action)[0]
+        r = MountainCar.reward(self._state, action, sp)
+        t = MountainCar.terminal(self._state, action, sp)
 
         self._state = sp
 
         return (r, sp.copy(), t)
+
+    def setState(self, state: np.ndarray):
+        self._state = state.copy()
+
+    def copy(self, seed: int):
+        m = MountainCar(seed)
+        m._state = self._state.copy()
+        return m
