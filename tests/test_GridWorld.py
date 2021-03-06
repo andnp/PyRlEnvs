@@ -1,3 +1,5 @@
+from tkinter import Grid
+from PyRlEnvs.GridWorld.utils import getState, predecessor
 import unittest
 import numpy as np
 from itertools import product
@@ -109,7 +111,9 @@ class TestGridWorld(unittest.TestCase):
     def test_transitionMatrix(self):
         GridWorld = testWorld()
 
-        behavior = lambda s: np.array([0.25, 0.25, 0.25, 0.25])
+        def behavior(s: int):
+            return np.array([0.25, 0.25, 0.25, 0.25])
+
         P = GridWorld.constructTransitionMatrix(behavior)
 
         E = np.zeros((9, 9))
@@ -117,19 +121,19 @@ class TestGridWorld(unittest.TestCase):
             s_idx = GridWorld.getState(s)
 
             # UP
-            sp_idx = GridWorld.getState((s[0], s[1]+1))
+            sp_idx = GridWorld.getState((s[0], s[1] + 1))
             E[s_idx, sp_idx] += 0.25
 
             # RIGHT
-            sp_idx = GridWorld.getState((s[0]+1, s[1]))
+            sp_idx = GridWorld.getState((s[0] + 1, s[1]))
             E[s_idx, sp_idx] += 0.25
 
             # DOWN
-            sp_idx = GridWorld.getState((s[0], s[1]-1))
+            sp_idx = GridWorld.getState((s[0], s[1] - 1))
             E[s_idx, sp_idx] += 0.25
 
             # LEFT
-            sp_idx = GridWorld.getState((s[0]-1, s[1]))
+            sp_idx = GridWorld.getState((s[0] - 1, s[1]))
             E[s_idx, sp_idx] += 0.25
 
         self.assertTrue(np.allclose(P, E))
@@ -162,3 +166,17 @@ class TestGridWorld(unittest.TestCase):
         self.assertEqual(r, -1)
         self.assertEqual(t, False)
         self.assertEqual(sp, GridWorld.getState((0, 0)))
+
+class TestUtils(unittest.TestCase):
+    def test_predecessor(self):
+        shape = (5, 4)
+        sp = getState((3, 3), shape)
+        s = predecessor(sp, 0, shape)
+
+        e = sp, getState((3, 2), shape)
+        self.assertEqual(s, e)
+
+        sp = getState((4, 3), shape)
+        s = predecessor(sp, 3, shape)
+
+        self.assertEqual(s, None)
