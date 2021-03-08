@@ -1,3 +1,4 @@
+from PyRlEnvs.utils.RandomVariables import DeterministicRandomVariable
 import numpy as np
 from numba import njit
 from PyRlEnvs.BaseEnvironment import BaseEnvironment
@@ -28,7 +29,7 @@ def _nextState(s: np.ndarray, a: int):
 class MountainCar(BaseEnvironment):
     @staticmethod
     def nextStates(s: np.ndarray, a: int):
-        return [_nextState(s, a)]
+        return DeterministicRandomVariable(_nextState(s, a))
 
     @staticmethod
     def actions(s: np.ndarray):
@@ -60,8 +61,7 @@ class MountainCar(BaseEnvironment):
         return start
 
     def step(self, action: int):
-        # deterministic next state, so no need to sample
-        sp = MountainCar.nextStates(self._state, action)[0]
+        sp = MountainCar.nextStates(self._state, action).sample(self.rng)
         r = MountainCar.reward(self._state, action, sp)
         t = MountainCar.terminal(self._state, action, sp)
 

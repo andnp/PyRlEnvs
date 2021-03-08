@@ -1,3 +1,4 @@
+from PyRlEnvs.utils.RandomVariables import DiscreteRandomVariable
 from abc import abstractmethod
 from typing import Callable, Optional
 import numpy as np
@@ -69,7 +70,8 @@ class FiniteDynamics(BaseEnvironment):
 
     @classmethod
     def nextStates(cls, s: int, a: int):
-        return _nextStates(cls.K, s, a)
+        sp = _nextStates(cls.K, s, a)
+        return DiscreteRandomVariable(sp, cls.K[s, a, sp])
 
     @classmethod
     def reward(cls, s: int, a: int, sp: int):
@@ -113,9 +115,7 @@ class FiniteDynamics(BaseEnvironment):
         return self.state
 
     def step(self, action: int):
-        p_sp = self.K[self.state, action]
-        sp = sample(p_sp, self.rng)
-
+        sp = self.nextStates(self.state, action).sample(self.rng)
         r = self.reward(self.state, action, sp)
         t = self.terminal(self.state, action, sp)
 
