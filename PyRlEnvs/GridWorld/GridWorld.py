@@ -76,7 +76,7 @@ class _BaseGridWorld(FiniteDynamics):
 
 # generate the basic transition and reward kernels for an empty gridworld
 # we can later modify these when we add new elements
-def _buildKernels(shape: Coords, costToGoal: bool):
+def buildKernels(shape: Coords, costToGoal: bool):
     width, height = shape
     states = width * height
 
@@ -130,7 +130,7 @@ def buildGridWorld(builder: GridWorldBuilder):
     _T = np.zeros((states, actions, states))
     _d0 = np.zeros(states)
 
-    _K, _R = _buildKernels(builder.shape, builder.costToGoal)
+    _K, _R = buildKernels(builder.shape, builder.costToGoal)
 
     # modify the tensors with individual elements
     builder.apply(_d0, _K, _T, _R)

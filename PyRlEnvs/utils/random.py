@@ -1,4 +1,4 @@
-from typing import Any, Sequence, TypeVar, Union
+from typing import Any, Sequence, Set, TypeVar, Union
 import numpy as np
 from numba import njit
 
@@ -30,6 +30,7 @@ def sample(arr: NpArray, rng: Any = np.random) -> int:
 
 # also much faster than np.random.choice
 # choose an element from a list with uniform random probability
-def choice(arr: Sequence[T], rng: Any = np.random) -> T:
-    idxs = rng.permutation(len(arr))
-    return arr[idxs[0]]
+def choice(arr: Union[Sequence[T], Set[T]], rng: Any = np.random) -> T:
+    idx = rng.randint(0, len(arr))
+
+    return list(arr)[idx]
