@@ -8,7 +8,7 @@ from PyRlEnvs.GridWorld.utils import Coords, getCoords, getState
 # Maze generating alg
 # -------------------
 
-def sample(_shape: Coords, seed: int = 0):
+def sample(_shape: Coords, costToGoal: bool = True, seed: int = 0):
     rng = np.random.RandomState(seed)
 
     width, height = _shape
@@ -27,6 +27,9 @@ def sample(_shape: Coords, seed: int = 0):
     terminal_state = getState((width - 1, height - 1), _shape)
     _T[terminal_state, :, terminal_state] = 1
 
+    r = -1 if costToGoal else 0
+    rt = -1 if costToGoal else 1
+
     while len(unvisited) > 0:
         path = _samplePath(unvisited, _shape, rng)
 
@@ -37,17 +40,19 @@ def sample(_shape: Coords, seed: int = 0):
 
                 for a in actions(prev, cell, _shape):
                     _K[prev, a, cell] = 1
-                    _R[prev, a, cell] = -1
+                    _R[prev, a, cell] = r
 
                     if cell == terminal_state:
                         _T[prev, a, cell] = 1
+                        _R[prev, a, cell] = rt
 
                 for a in actions(cell, prev, _shape):
                     _K[cell, a, prev] = 1
-                    _R[cell, a, prev] = -1
+                    _R[cell, a, prev] = r
 
                     if prev == terminal_state:
                         _T[cell, a, prev] = 1
+                        _R[cell, a, prev] = rt
 
             prev = cell
 
@@ -58,7 +63,7 @@ def sample(_shape: Coords, seed: int = 0):
             # if this action doesn't lead anywhere, then it needs to be a self-transition
             if _K[state, a].sum() == 0:
                 _K[state, a, state] = 1
-                _R[state, a, state] = -1
+                _R[state, a, state] = r
 
     # set start state as the bottom left
     start = getState((0, 0), _shape)
