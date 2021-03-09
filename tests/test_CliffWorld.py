@@ -24,7 +24,7 @@ class TestCliffWorld(unittest.TestCase):
         self.assertFalse(t)
 
         r, sp, t = env.step(RIGHT)
-        self.assertEqual(r, -1000)
+        self.assertEqual(r, -100)
         self.assertEqual(sp, Env.getState((0, 0)))
         self.assertFalse(t)
 
@@ -40,7 +40,7 @@ class TestCliffWorld(unittest.TestCase):
             self.assertFalse(t)
 
         r, sp, t = env.step(DOWN)
-        self.assertEqual(r, -1000)
+        self.assertEqual(r, -100)
         self.assertEqual(sp, Env.getState((0, 0)))
         self.assertFalse(t)
 

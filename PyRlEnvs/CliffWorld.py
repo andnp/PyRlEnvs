@@ -27,7 +27,7 @@ class Cliff(Element):
         for (s, a) in predecessors(target, self.shape):
             # reminder that we *don't* ever actually transition into the cliff
             # we end up back in the start state instead
-            R[s, a, starts] = -1000
+            R[s, a, starts] = -100
 
             # probably there is only one start state
             # but in case we ever define multiple, then uniform random
