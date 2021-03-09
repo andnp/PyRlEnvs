@@ -74,7 +74,7 @@ class FiniteDynamics(BaseEnvironment):
         return DiscreteRandomVariable(sp, cls.K[s, a, sp])
 
     @classmethod
-    def reward(cls, s: int, a: int, sp: int):
+    def reward(cls, s: int, a: int, sp: int) -> float:
         return cls.Rs[s, a, sp]
 
     @classmethod

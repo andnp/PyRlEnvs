@@ -48,6 +48,7 @@ class _BaseGridWorld(FiniteDynamics):
 
     def addElement(self, element: Element):
         element.init(self.shape)
+        element.apply(self.d0, self.K, self.T, self.Rs)
         self.elements.append(element)
 
     def addElements(self, elements: List[Element]):
@@ -57,7 +58,7 @@ class _BaseGridWorld(FiniteDynamics):
     @classmethod
     def show(cls):
         width, height = cls.shape
-        row_str = '-' * (width * 4 + 1)
+        row_str = '+---' * (width) + '+'
         print(row_str)
         for y in range(height - 1, -1, -1):
             print('|', end='')
