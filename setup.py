@@ -7,7 +7,7 @@ setup(
     author_email='andnpatterson@gmail.com',
     packages=find_packages(exclude=['tests*', 'scripts*']),
     install_requires=[
-        "numpy>=1.19.5",
+        "numpy>=1.19.0",
         "numba>=0.52.0",
         "RlGlue>=0.2",
     ],
