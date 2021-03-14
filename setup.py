@@ -11,7 +11,7 @@ setup(
         "numba>=0.53.0",
         "RlGlue>=0.3",
     ],
-    version=0.16,
+    version=0.17,
     license='MIT',
     description='A handful of fast environments for running RL experiments',
     long_description='todo',
