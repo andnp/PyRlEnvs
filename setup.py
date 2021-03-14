@@ -8,8 +8,8 @@ setup(
     packages=find_packages(exclude=['tests*', 'scripts*']),
     install_requires=[
         "numpy>=1.19.0",
-        "numba>=0.52.0",
-        "RlGlue>=0.2",
+        "numba>=0.53.0",
+        "RlGlue>=0.3",
     ],
     version=0.16,
     license='MIT',
