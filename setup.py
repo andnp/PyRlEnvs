@@ -10,6 +10,7 @@ setup(
         "numpy>=1.19.0",
         "numba>=0.53.0",
         "RlGlue>=0.3",
+        "scipy>=1.5.0",
     ],
     version=0.17,
     license='MIT',
