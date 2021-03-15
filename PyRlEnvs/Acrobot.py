@@ -123,7 +123,7 @@ class JitterAcrobot(Acrobot):
 
     def step(self, action: int):
         eps = self.rng.normal(0, self.noise)
-        nuisance = self.rng.gamma(0.1, 1)  # mean = 0.1
+        nuisance = self.rng.gamma(0.1, 1) - 0.1  # make this 0 mean
 
         # add some noise to the system, but make sure dt is always positive.
         # assume there's some fundamental constraint that we can only sample at most 8 times per second
