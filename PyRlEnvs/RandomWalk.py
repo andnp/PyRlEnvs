@@ -1,3 +1,4 @@
+from PyRlEnvs.Category import addToCategory
 import numpy as np
 from PyRlEnvs.FiniteDynamics import FiniteDynamics
 
@@ -100,3 +101,7 @@ def dependentFeatures(n: int):
 
 def tabularFeatures(n: int):
     return np.eye(n)
+
+addToCategory('ope', RandomWalk)
+addToCategory('random-walk', RandomWalk)
+addToCategory('finite-dynamics', RandomWalk)

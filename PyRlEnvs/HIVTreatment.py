@@ -23,6 +23,7 @@ A reinforcement learning approach
 In Proceedings of the 45th IEEE Conference on Decision and Control (2006).
 """
 
+from PyRlEnvs.Category import addToCategory
 import numpy as np
 from numba import njit
 from PyRlEnvs.utils.math import clipEach
@@ -147,3 +148,5 @@ class HIVTreatment(BaseEnvironment):
         m = HIVTreatment(seed)
         m._state = self._state.copy()
         return m
+
+addToCategory('classic-control', HIVTreatment)

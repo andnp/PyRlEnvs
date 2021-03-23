@@ -1,3 +1,4 @@
+from PyRlEnvs.Category import addToCategory
 import numpy as np
 from numba import njit
 from PyRlEnvs.utils.math import clip, wrap
@@ -137,3 +138,6 @@ class JitterAcrobot(Acrobot):
         self._state = sp
 
         return (r, _transform(sp), t)
+
+addToCategory('classic-control', Acrobot)
+addToCategory('stochastic', JitterAcrobot)

@@ -3,6 +3,7 @@ TODO:
 From <cite Baird>
 """
 
+from PyRlEnvs.Category import addToCategory
 import numpy as np
 from PyRlEnvs.FiniteDynamics import FiniteDynamics
 
@@ -48,3 +49,7 @@ def representationMatrix():
 
 def initialWeights():
     return np.array([1, 1, 1, 1, 1, 1, 1, 10.])
+
+addToCategory('ope', BairdCounterexample)
+addToCategory('ope-counterexample', BairdCounterexample)
+addToCategory('finite-dynamics', BairdCounterexample)

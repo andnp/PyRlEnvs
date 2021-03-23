@@ -1,3 +1,4 @@
+from PyRlEnvs.Category import addToCategory
 import numpy as np
 from PyRlEnvs.GridWorld.Elements import Element, StartState, GoalState
 from PyRlEnvs.GridWorld.utils import Coords, predecessors
@@ -53,3 +54,7 @@ def build(shape: Coords = (12, 4)):
     return cliffWorldBuilder.build()
 
 CliffWorld = build()
+
+addToCategory('gridworld', CliffWorld)
+addToCategory('finite-dynamics', CliffWorld)
+addToCategory('sutton-barto', CliffWorld)

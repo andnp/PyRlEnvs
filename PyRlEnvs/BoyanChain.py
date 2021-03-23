@@ -3,6 +3,7 @@ TODO:
 From <cite Boyan>
 """
 
+from PyRlEnvs.Category import addToCategory
 import numpy as np
 from PyRlEnvs.FiniteDynamics import FiniteDynamics
 
@@ -68,3 +69,7 @@ def representationMatrix():
         [0,    0,    0.25, 0.75],  # noqa: E241
         [0,    0,    0,    1   ],  # noqa: E241
     ])
+
+addToCategory('ope', BoyanChain)
+addToCategory('random-walk', BoyanChain)
+addToCategory('finite-dynamics', BoyanChain)

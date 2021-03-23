@@ -1,3 +1,4 @@
+from PyRlEnvs.Category import addToCategory
 import numpy as np
 from PyRlEnvs.GridWorld.Elements import Element, WallState
 from PyRlEnvs.GridWorld import GridWorldBuilder
@@ -37,3 +38,6 @@ def build():
     return fourRoomsBuilder.build()
 
 FourRooms = build()
+
+addToCategory('gridworld', FourRooms)
+addToCategory('finite-dynamics', FourRooms)

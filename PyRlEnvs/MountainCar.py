@@ -1,3 +1,4 @@
+from PyRlEnvs.Category import addToCategory
 from PyRlEnvs.utils.RandomVariables import DeterministicRandomVariable
 import numpy as np
 from numba import njit
@@ -76,3 +77,6 @@ class MountainCar(BaseEnvironment):
         m = MountainCar(seed)
         m._state = self._state.copy()
         return m
+
+addToCategory('classic-control', MountainCar)
+addToCategory('sutton-barto', MountainCar)

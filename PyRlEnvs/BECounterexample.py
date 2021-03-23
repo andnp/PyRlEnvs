@@ -5,6 +5,7 @@ Example 11.4, the MRP that shows that the bellman error is "not learnable"
 This implementation is set up as an MDP. We recover the original MRP if the behavior policy is uniform random.
 """
 
+from PyRlEnvs.Category import addToCategory
 import numpy as np
 from PyRlEnvs.FiniteDynamics import FiniteDynamics
 
@@ -54,3 +55,7 @@ def representationMatrix():
         [0, 1],
         [0, 1],
     ])
+
+addToCategory('ope', BECounterexample)
+addToCategory('ope-counterexample', BECounterexample)
+addToCategory('finite-dynamics', BECounterexample)
