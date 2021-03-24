@@ -5,6 +5,7 @@ Example 11.4, the MRP that shows that the bellman error is "not learnable"
 This implementation is set up as an MDP. We recover the original MRP if the behavior policy is uniform random.
 """
 
+from PyRlEnvs.utils.math import immutable
 from PyRlEnvs.Category import addToCategory
 import numpy as np
 from PyRlEnvs.FiniteDynamics import FiniteDynamics
@@ -38,11 +39,11 @@ class BECounterexample(FiniteDynamics):
     num_states = 3
     num_actions = 2
 
-    K = _buildTransitionKernel()
-    Rs = _buildRewardKernel()
+    K = immutable(_buildTransitionKernel())
+    Rs = immutable(_buildRewardKernel())
 
-    T = np.zeros((3, 2, 3))
-    d0 = np.array([1., 0, 0])
+    T = immutable(np.zeros((3, 2, 3)))
+    d0 = immutable(np.array([1., 0, 0]))
 
 # some utility functions to encode other important parts of the problem spec
 # not necessarily environment specific, but this is as good a place as any to store them

@@ -30,3 +30,7 @@ def clip(x: float, mi: float, ma: float):
         return mi
 
     return x
+
+def immutable(arr: np.ndarray):
+    arr.setflags(write=False)
+    return arr

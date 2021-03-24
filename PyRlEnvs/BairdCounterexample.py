@@ -3,6 +3,7 @@ TODO:
 From <cite Baird>
 """
 
+from PyRlEnvs.utils.math import immutable
 from PyRlEnvs.Category import addToCategory
 import numpy as np
 from PyRlEnvs.FiniteDynamics import FiniteDynamics
@@ -22,11 +23,11 @@ class BairdCounterexample(FiniteDynamics):
     num_states = 7
     num_actions = 2
 
-    K = _buildTransitionKernel()
-    Rs = np.zeros((7, 2, 7))
+    K = immutable(_buildTransitionKernel())
+    Rs = immutable(np.zeros((7, 2, 7)))
 
-    T = np.zeros((7, 2, 7))
-    d0 = np.array([0, 0, 0, 0, 0, 0, 1.])
+    T = immutable(np.zeros((7, 2, 7)))
+    d0 = immutable(np.array([0, 0, 0, 0, 0, 0, 1.]))
 
 # some utility functions to encode other important parts of the problem spec
 # not necessarily environment specific, but this is as good a place as any to store them

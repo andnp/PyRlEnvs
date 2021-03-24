@@ -11,33 +11,49 @@ from PyRlEnvs.GridWorld.utils import Coords, getCoords, getState
 def sample(_shape: Coords, costToGoal: bool = True, seed: int = 0):
     rng = np.random.RandomState(seed)
 
+    # collect some metadata
     width, height = _shape
     states = width * height
 
+    # build the environment transition kernels
     _K = np.zeros((states, 4, states))
     _R = np.zeros((states, 4, states))
     _T = np.zeros((states, 4, states))
     _d0 = np.zeros(states)
 
+    # build the set of states that the wall-builder
+    # has not yet visited, initially this is every state
     unvisited = set(range(states))
 
+    # pick a state and mark it as visited
+    # we will guarantee that all paths connect to this state
+    # at some point
     start = Random.choice(unvisited, rng)
     unvisited.remove(start)
 
+    # the terminal state is in the top right of the maze
     terminal_state = getState((width - 1, height - 1), _shape)
     _T[terminal_state, :, terminal_state] = 1
 
+    # build a simple -1 per step reward function
     r = -1 if costToGoal else 0
     rt = -1 if costToGoal else 1
 
+    # sample paths until we've visited every state
     while len(unvisited) > 0:
         path = _samplePath(unvisited, _shape, rng)
 
+        # walk the path and "activate" every transition from
+        # prev -> cell. need to carefully handle termination states
+        # also make sure the agent can walk backwards through the space
+        # by connecting cell -> prev
         prev = None
         for cell in path:
             if prev is not None:
                 unvisited.remove(prev)
 
+                # mark all available actions from prev -> cell
+                # might be multiple actions due to bumping into walls
                 for a in actions(prev, cell, _shape):
                     _K[prev, a, cell] = 1
                     _R[prev, a, cell] = r
@@ -46,6 +62,7 @@ def sample(_shape: Coords, costToGoal: bool = True, seed: int = 0):
                         _T[prev, a, cell] = 1
                         _R[prev, a, cell] = rt
 
+                # mark all available actions from cell -> prev
                 for a in actions(cell, prev, _shape):
                     _K[cell, a, prev] = 1
                     _R[cell, a, prev] = r

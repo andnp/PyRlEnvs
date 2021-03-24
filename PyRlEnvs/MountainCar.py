@@ -28,20 +28,20 @@ def _nextState(s: np.ndarray, a: int):
     return np.array([p, v])
 
 class MountainCar(BaseEnvironment):
-    @staticmethod
-    def nextStates(s: np.ndarray, a: int):
+    @classmethod
+    def nextStates(cls, s: np.ndarray, a: int):
         return DeterministicRandomVariable(_nextState(s, a))
 
-    @staticmethod
-    def actions(s: np.ndarray):
+    @classmethod
+    def actions(cls, s: np.ndarray):
         return [0, 1, 2]
 
-    @staticmethod
-    def reward(s: np.ndarray, a: int, sp: np.ndarray):
+    @classmethod
+    def reward(cls, s: np.ndarray, a: int, sp: np.ndarray):
         return -1
 
-    @staticmethod
-    def terminal(s: np.ndarray, a: int, sp: np.ndarray):
+    @classmethod
+    def terminal(cls, s: np.ndarray, a: int, sp: np.ndarray):
         p, _ = sp
 
         return p >= 0.5

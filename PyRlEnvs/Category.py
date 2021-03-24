@@ -7,6 +7,8 @@ class EnvironmentMetadata(NamedTuple):
     description: Optional[str] = None
 
 
+# TODO: generate documentation based off of this information
+# TODO: generate experiment descriptions based off of this (not in this repo, but this is best place to store this todo right now)
 class Category(Sequence[EnvironmentMetadata]):
     def __init__(self, name: str, description: Optional[str] = None):
         self.name = name
@@ -25,6 +27,9 @@ class Category(Sequence[EnvironmentMetadata]):
 
     def __iter__(self) -> Iterator[EnvironmentMetadata]:
         return self.environments.__iter__()
+
+    def __getitem__(self, idx: int) -> EnvironmentMetadata:
+        return self.environments.__getitem__(idx)
 
 _categories: Dict[str, Category] = {}
 

@@ -1,6 +1,6 @@
 import numpy as np
 from abc import abstractmethod
-from typing import Generic, Optional, Sequence, TypeVar, Union
+from typing import Any, Callable, Generic, Optional, Sequence, TypeVar, Union
 from PyRlEnvs.utils.random import sample
 
 T = TypeVar('T')
@@ -60,3 +60,13 @@ class DiscreteRandomVariable(RandomVariable[T]):
     def fromUniform(vals: Sequence[T], rng: Optional[RNG] = None):
         probs: np.ndarray = np.ones(len(vals)) / len(vals)
         return DiscreteRandomVariable[T](vals, probs, rng)
+
+class InferedRandomVariable(RandomVariable[T]):
+    def __init__(self, sampling_func: Callable[..., T], rng: Optional[RNG] = None):
+        super().__init__(rng)
+
+        self.sampling_func = sampling_func
+
+    def sample(self, *args: Any, rng: Optional[RNG] = None, **kwargs: Any):
+        rng = self._rng(rng)
+        return self.sampling_func(rng, *args, **kwargs)
