@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from PyRlEnvs.BECounterexample import BECounterexample, A, B, Bp, behaviorPolicy
+from PyRlEnvs.domains.BECounterexample import BECounterexample, A, B, Bp, behaviorPolicy
 
 np.random.seed(0)
 

@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from PyRlEnvs.HIVTreatment import HIVTreatment
+from PyRlEnvs.domains.HIVTreatment import HIVTreatment
 
 np.random.seed(0)
 
@@ -25,5 +25,5 @@ class TestHIV(unittest.TestCase):
 
         r, sp, t = env.step(2)
         self.assertTrue(np.allclose(sp, [5.26640187, 1.20553485, 3.69160487, 1.62827991, 4.26513502, 1.38600307]))
-        self.assertEqual(r, 22300.86788001542)
+        self.assertTrue(np.allclose(r, 22300.86788001542, rtol=1e-8))
         self.assertFalse(t)

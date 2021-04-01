@@ -1,3 +1,8 @@
+"""doc
+TODO: find original citation
+"""
+
+
 from PyRlEnvs.Category import addToCategory
 import numpy as np
 from numba import njit

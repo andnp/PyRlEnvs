@@ -1,7 +1,7 @@
 from typing import Any
 import unittest
 import numpy as np
-from PyRlEnvs.Acrobot import Acrobot
+from PyRlEnvs.domains.Acrobot import Acrobot
 import gym
 
 np.random.seed(0)

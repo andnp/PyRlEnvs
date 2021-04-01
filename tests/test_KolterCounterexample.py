@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from PyRlEnvs.KolterCounterexample import KolterCounterexample, buildProblem
+from PyRlEnvs.domains.KolterCounterexample import KolterCounterexample, buildProblem
 
 np.random.seed(0)
 

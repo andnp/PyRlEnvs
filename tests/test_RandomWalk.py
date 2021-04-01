@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from PyRlEnvs.RandomWalk import RandomWalk
+from PyRlEnvs.domains.RandomWalk import RandomWalk
 
 np.random.seed(0)
 

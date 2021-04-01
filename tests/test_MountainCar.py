@@ -1,7 +1,7 @@
 from typing import Any
 import unittest
 import numpy as np
-from PyRlEnvs.MountainCar import MountainCar
+from PyRlEnvs.domains.MountainCar import MountainCar
 import gym
 
 np.random.seed(0)

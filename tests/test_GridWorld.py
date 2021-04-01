@@ -1,4 +1,3 @@
-from tkinter import Grid
 from PyRlEnvs.GridWorld.utils import getState, predecessor
 import unittest
 import numpy as np

@@ -193,9 +193,16 @@ def _samplePath(unvisited: Set[int], shape: Coords, rng: Any):
     while cell in unvisited:
         cell = Random.choice(neighbors(cell, shape), rng)
 
+        # delete loops, otherwise we cannot guarantee solvability
         if cell in path:
             path = path[0:path.index(cell) + 1]
         else:
             path.append(cell)
 
     return path
+
+# -----------------------
+# Provide a default class
+# -----------------------
+Maze10x10 = sample((10, 10))
+Maze5x5 = sample((5, 5))

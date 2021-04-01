@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-import PyRlEnvs.CliffWorld as CliffWorld
+import PyRlEnvs.domains.CliffWorld as CliffWorld
 
 np.random.seed(0)
 

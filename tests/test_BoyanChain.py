@@ -1,4 +1,4 @@
-from PyRlEnvs.BoyanChain import BoyanChain, behaviorPolicy
+from PyRlEnvs.domains.BoyanChain import BoyanChain, behaviorPolicy
 import unittest
 import numpy as np
 
