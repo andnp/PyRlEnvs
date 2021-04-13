@@ -1,8 +1,6 @@
 import numpy as np
-from numba import njit
 from typing import Callable
 
-@njit(cache=True)
 def rungeKutta(derivs: Callable[[np.ndarray, float], np.ndarray], y0: np.ndarray, ts: np.ndarray):
     yout = np.zeros((len(ts), len(y0)))
 
@@ -22,7 +20,6 @@ def rungeKutta(derivs: Callable[[np.ndarray, float], np.ndarray], y0: np.ndarray
 
     return yout
 
-@njit(cache=True)
 def euler(derivs: Callable[[np.ndarray, float], np.ndarray], y0: np.ndarray, ts: np.ndarray):
     yout = np.zeros((len(ts), len(y0)))
 
@@ -35,6 +32,6 @@ def euler(derivs: Callable[[np.ndarray, float], np.ndarray], y0: np.ndarray, ts:
         y0 = yout[i]
         ydot = derivs(y0, t)
 
-        yout[i + 1] = y0 + ydot * (dt / len(ts))
+        yout[i + 1] = y0 + ydot * dt
 
     return yout
