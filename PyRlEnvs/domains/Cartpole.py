@@ -1,3 +1,5 @@
+from PyRlEnvs.utils.distributions import ClippedGaussian, DeltaDist, Gamma, Gaussian, Uniform, sampleChildren
+from functools import partial
 import numpy as np
 from numba import njit
 
@@ -6,12 +8,7 @@ from PyRlEnvs.BaseEnvironment import BaseEnvironment
 from PyRlEnvs.utils.numerical import euler
 
 @njit(cache=True)
-def _dsdt(sa: np.ndarray, t: float):
-    g = 9.8
-    l = 0.5
-    masspole = 0.1
-    masscart = 1.0
-
+def _dsdt(g: float, l: float, masspole: float, masscart: float, sa: np.ndarray, t: float):
     polemass_length = masspole * l
     total_mass = masspole + masscart
 
@@ -45,28 +42,84 @@ def _nextState(s: np.ndarray, a: int, dt: float) -> np.ndarray:
     return sp
 
 class Cartpole(BaseEnvironment):
-    dt = 0.02
+    physical_constants = {
+        # physics of world / cart / pole
+        'gravity': 9.8,
+        'pole_length': 0.5,
+        'pole_mass': 0.1,
+        'cart_mass': 1.0,
+    }
 
-    @classmethod
-    def nextStates(cls, s: np.ndarray, a: int):
-        sp = _nextState(s, a, cls.dt)
-        return DeterministicRandomVariable(sp)
+    per_step_constants = {
+        # for integration fidelity
+        'dt': DeltaDist(0.02),
 
-    @classmethod
-    def actions(cls, s: np.ndarray):
-        return [0, 1]
+        # controller force
+        'force': DeltaDist(10),
+    }
 
-    @classmethod
-    def reward(cls, s: np.ndarray, a: int, sp: np.ndarray):
-        return 1.0
+    randomized_constants = {
+        'gravity': ClippedGaussian(mean=9.8, stddev=1.0, mi=0.0),
+        'pole_length': Uniform(mi=0.4, ma=0.6),
+        'pole_mass': Uniform(mi=0.05, ma=0.15),
+        'cart_mass': Uniform(mi=0.9, ma=1.1),
+    }
 
-    @classmethod
-    def terminal(cls, s: np.ndarray, a: int, sp: np.ndarray):
-        return _isTerminal(sp)
+    per_step_random_constants = {
+        # make time sampled from a normal distribution (clipped to ensure non-negative) with a long-tailed nuisance
+        # distribution to simulate random delays or interference
+        'dt': 0.9 * ClippedGaussian(mean=0.2, stddev=0.02, mi=0.1, ma=None) + 0.1 * Gamma(shape=0.1, scale=2.0),
 
-    def __init__(self, seed: int = 0):
+        'force': Gaussian(mean=10, stddev=1.0),
+    }
+
+    def __init__(self, randomize: bool = False, seed: int = 0):
         super().__init__(seed)
         self._state = np.zeros(4)
+
+        if randomize:
+            self.physical_constants = sampleChildren(self.randomized_constants, self.rng)
+            self.per_step_constants = self.per_step_random_constants
+
+        self._dsdt = partial(_dsdt,
+            self.physical_constants['gravity'],
+            self.physical_constants['pole_length'],
+            self.physical_constants['pole_mass'],
+            self.physical_constants['cart_mass'],
+        )
+
+    # -------------------------
+    # -- Dynamics equations --
+    # -------------------------
+
+    def nextStates(self, s: np.ndarray, a: int):
+        # get per-step constants
+        dt = self.per_step_constants['dt'].sample(self.rng)
+        force = self.per_step_constants['force'].sample(self.rng)
+
+        force = force if a == 1 else -force
+
+        sa = np.append(s, force)
+        spa = euler(self._dsdt, sa, np.array([0, dt]))
+
+        # only need the last result of the integration
+        spa = spa[-1]
+        sp = spa[:-1]
+
+        return DeterministicRandomVariable(sp)
+
+    def actions(self, s: np.ndarray):
+        return [0, 1]
+
+    def reward(self, s: np.ndarray, a: int, sp: np.ndarray):
+        return 1.0
+
+    def terminal(self, s: np.ndarray, a: int, sp: np.ndarray):
+        return _isTerminal(sp)
+
+    # ------------------------
+    # -- Stateful functions --
+    # ------------------------
 
     def start(self):
         start = self.rng.uniform(-0.05, 0.05, size=4)
