@@ -47,16 +47,16 @@ class Cartpole(BaseEnvironment):
     }
 
     randomized_constants = {
-        'gravity': ClippedGaussian(mean=9.8, stddev=1.0, mi=0.0),
-        'pole_length': Uniform(mi=0.4, ma=0.6),
+        'gravity': ClippedGaussian(mean=9.8, stddev=2.0, mi=0.0),
+        'pole_length': Uniform(mi=0.3, ma=0.7),
         'pole_mass': Uniform(mi=0.05, ma=0.15),
-        'cart_mass': Uniform(mi=0.9, ma=1.1),
+        'cart_mass': Uniform(mi=0.6, ma=1.4),
     }
 
     per_step_random_constants = {
         # make time sampled from a normal distribution (clipped to ensure non-negative) with a long-tailed nuisance
         # distribution to simulate random delays or interference
-        'dt': 0.9 * ClippedGaussian(mean=0.2, stddev=0.02, mi=0.1, ma=None) + 0.1 * Gamma(shape=0.1, scale=2.0),
+        'dt': 0.95 * ClippedGaussian(mean=0.02, stddev=0.01, mi=0.015, ma=None) + 0.05 * Gamma(shape=0.01, scale=2.0),
 
         'force': Gaussian(mean=10, stddev=1.0),
     }
@@ -111,20 +111,20 @@ class Cartpole(BaseEnvironment):
 
     def start(self):
         start = self.rng.uniform(-0.05, 0.05, size=4)
-        self._start = start
+        self._state = start
         return start
 
     def step(self, action: int):
         sp = self.nextStates(self._state, action).sample(self.rng)
         r = self.reward(self._state, action, sp)
-        t = self.terminal(self._start, action, sp)
+        t = self.terminal(self._state, action, sp)
 
         self._state = sp
 
         return (r, sp, t)
 
     def setState(self, state: np.ndarray):
-        self._start = state.copy()
+        self._state = state.copy()
 
     def copy(self, seed: int):
         m = CartPole(seed)
