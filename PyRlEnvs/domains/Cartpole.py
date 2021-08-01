@@ -29,18 +29,6 @@ def _isTerminal(s: np.ndarray) -> bool:
     theta_thresh = 12 * 2 * np.pi / 360
     return x < -2.4 or x > 2.4 or theta < -theta_thresh or theta > theta_thresh
 
-def _nextState(s: np.ndarray, a: int, dt: float) -> np.ndarray:
-    force = 10 if a == 1 else -10
-
-    sa = np.append(s, force)
-    spa = euler(_dsdt, sa, np.array([0, dt]))
-
-    # only need the last result of the integration
-    spa = spa[-1]
-    sp = spa[:-1]
-
-    return sp
-
 class Cartpole(BaseEnvironment):
     physical_constants = {
         # physics of world / cart / pole
