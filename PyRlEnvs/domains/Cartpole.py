@@ -20,7 +20,7 @@ def _dsdt(sa: np.ndarray, t: float):
     sinTheta = np.sin(theta)
     cosTheta = np.cos(theta)
 
-    term1: float = (force * polemass_length * dtheta**2 * sinTheta) / total_mass
+    term1: float = (force + polemass_length * dtheta**2 * sinTheta) / total_mass
     ddtheta: float = (g * sinTheta - cosTheta * term1) / (l * (4 / 3 - masspole * cosTheta**2 / total_mass))
     ddx: float = term1 - polemass_length * ddtheta * cosTheta / total_mass
 
@@ -44,7 +44,7 @@ def _nextState(s: np.ndarray, a: int, dt: float) -> np.ndarray:
 
     return sp
 
-class CartPole(BaseEnvironment):
+class Cartpole(BaseEnvironment):
     dt = 0.02
 
     @classmethod
@@ -78,7 +78,7 @@ class CartPole(BaseEnvironment):
         r = self.reward(self._state, action, sp)
         t = self.terminal(self._start, action, sp)
 
-        self._start = sp
+        self._state = sp
 
         return (r, sp, t)
 
