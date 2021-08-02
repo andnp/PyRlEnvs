@@ -63,6 +63,7 @@ class Cartpole(BaseEnvironment):
 
     def __init__(self, randomize: bool = False, seed: int = 0):
         super().__init__(seed)
+        self.randomize = randomize
         self._state = np.zeros(4)
 
         if randomize:
@@ -127,6 +128,13 @@ class Cartpole(BaseEnvironment):
         self._state = state.copy()
 
     def copy(self, seed: int):
-        m = CartPole(seed)
+        m = Cartpole(randomize=self.randomize, seed=seed)
         m._state = self._state.copy()
+        m.physical_constants = self.physical_constants
+        m.per_step_constants = self.per_step_constants
+
+        # because we are changing the physics _after_ the derivatives are being precomputed
+        # we need to replace the derivatives with the correct eqns for these constants
+        m._dsdt = self._dsdt
+
         return m
