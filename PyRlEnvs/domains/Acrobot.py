@@ -4,7 +4,7 @@ TODO: find original citation
 
 
 from functools import partial
-from PyRlEnvs.utils.distributions import ClippedGaussian, DeltaDist, Gamma, Uniform, sampleChildren
+from PyRlEnvs.utils.distributions import ClippedGaussian, DeltaDist, Gamma, Gaussian, Uniform, sampleChildren
 from PyRlEnvs.Category import addToCategory
 import numpy as np
 from numba import njit
@@ -72,7 +72,10 @@ class Acrobot(BaseEnvironment):
     per_step_random_constants = {
         # use clipped gaussian to enforce a lower-bound constraint on how fast we can sample
         # realistically, we can see very long delays but we can never sample faster than the equipment allows
-        'dt': 0.99 * ClippedGaussian(mean=0.2, stddev=0.02, mi=0.125) + 0.01 * Gamma(shape=0.1, scale=2.0)
+        'dt': 0.99 * ClippedGaussian(mean=0.2, stddev=0.02, mi=0.125) + 0.01 * Gamma(shape=0.1, scale=2.0),
+
+        # note this isn't clipped, force can flip signs with low probability
+        'force': Gaussian(mean=1.0, stddev=0.4),
     }
 
     def __init__(self, randomize: bool = False, seed: int = 0):
@@ -162,5 +165,9 @@ class Acrobot(BaseEnvironment):
 
         return m
 
+class StochasticAcrobot(Acrobot):
+    def __init__(self, seed: int = 0):
+        super().__init__(randomize=True, seed=seed)
 
 addToCategory('classic-control', Acrobot)
+addToCategory('stochastic', StochasticAcrobot)
