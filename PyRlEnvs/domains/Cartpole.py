@@ -1,9 +1,9 @@
-from PyRlEnvs.utils.distributions import ClippedGaussian, DeltaDist, Gamma, Gaussian, Uniform, sampleChildren
-from functools import partial
 import numpy as np
 from numba import njit
+from functools import partial
 
-from PyRlEnvs.utils.RandomVariables import DeterministicRandomVariable
+from PyRlEnvs.Category import addToCategory
+from PyRlEnvs.utils.distributions import ClippedGaussian, DeltaDist, Gamma, Gaussian, Uniform, sampleChildren
 from PyRlEnvs.BaseEnvironment import BaseEnvironment
 from PyRlEnvs.utils.numerical import euler
 
@@ -47,7 +47,7 @@ class Cartpole(BaseEnvironment):
     }
 
     randomized_constants = {
-        'gravity': ClippedGaussian(mean=9.8, stddev=2.0, mi=0.0),
+        'gravity': ClippedGaussian(mean=9.8, stddev=2.0, mi=5.0, ma=13.8),
         'pole_length': Uniform(mi=0.3, ma=0.7),
         'pole_mass': Uniform(mi=0.05, ma=0.15),
         'cart_mass': Uniform(mi=0.6, ma=1.4),
@@ -81,7 +81,7 @@ class Cartpole(BaseEnvironment):
     # -- Dynamics equations --
     # -------------------------
 
-    def nextStates(self, s: np.ndarray, a: int):
+    def nextState(self, s: np.ndarray, a: int):
         # get per-step constants
         dt = self.per_step_constants['dt'].sample(self.rng)
         force = self.per_step_constants['force'].sample(self.rng)
@@ -95,7 +95,7 @@ class Cartpole(BaseEnvironment):
         spa = spa[-1]
         sp = spa[:-1]
 
-        return DeterministicRandomVariable(sp)
+        return sp
 
     def actions(self, s: np.ndarray):
         return [0, 1]
@@ -116,7 +116,7 @@ class Cartpole(BaseEnvironment):
         return start
 
     def step(self, action: int):
-        sp = self.nextStates(self._state, action).sample(self.rng)
+        sp = self.nextState(self._state, action)
         r = self.reward(self._state, action, sp)
         t = self.terminal(self._state, action, sp)
 
@@ -138,3 +138,10 @@ class Cartpole(BaseEnvironment):
         m._dsdt = self._dsdt
 
         return m
+
+class StochasticCartpole(Cartpole):
+    def __init__(self, seed: int = 0):
+        super().__init__(randomize=True, seed=seed)
+
+addToCategory('classic-control', Cartpole)
+addToCategory('stochastic', StochasticCartpole)
