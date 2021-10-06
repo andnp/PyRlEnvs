@@ -94,9 +94,8 @@ class MountainCar(BaseEnvironment):
             self.physical_constants['friction'],
         )
 
-    def nextState(self, s: np.ndarray, a: int):
+    def _integrate(self, s: np.ndarray, force: float):
         dt = self.per_step_constants['dt'].sample(self.rng)
-        force = self.per_step_constants['force'].sample(self.rng) * (a - 1)
 
         sa = np.append(s, force)
         spa = euler(self._dsdt, sa, np.array([0, dt]))
@@ -112,6 +111,12 @@ class MountainCar(BaseEnvironment):
             sp[1] = 0.
 
         return sp
+
+    def nextState(self, s: np.ndarray, a: int):
+        # convert a discrete action into a continuous force
+        force = self.per_step_constants['force'].sample(self.rng) * (a - 1)
+
+        return self._integrate(s, force)
 
     def actions(self, s: np.ndarray):
         return [0, 1, 2]
@@ -165,6 +170,13 @@ class GymMountainCar(MountainCar):
 class StochasticMountainCar(MountainCar):
     def __init__(self, seed: int = 0):
         super().__init__(randomize=True, seed=seed)
+
+class ContinuousActionMountainCar(MountainCar):
+    def nextState(self, s: np.ndarray, a: float):
+        force = np.clip(a, -3, 3)
+
+        return self._integrate(s, force)
+
 
 addToCategory('classic-control', MountainCar)
 addToCategory('sutton-barto', GymMountainCar)

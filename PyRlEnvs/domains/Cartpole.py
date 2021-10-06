@@ -143,5 +143,20 @@ class StochasticCartpole(Cartpole):
     def __init__(self, seed: int = 0):
         super().__init__(randomize=True, seed=seed)
 
+class ContinuousActionCartpole(Cartpole):
+    def nextState(self, s: np.ndarray, force: float):
+        # get per-step constants
+        dt = self.per_step_constants['dt'].sample(self.rng)
+
+        force = np.clip(force, -12, 12)
+        sa = np.append(s, force)
+        spa = euler(self._dsdt, sa, np.array([0, dt]))
+
+        # only need the last result of the integration
+        spa = spa[-1]
+        sp = spa[:-1]
+
+        return sp
+
 addToCategory('classic-control', Cartpole)
 addToCategory('stochastic', StochasticCartpole)
