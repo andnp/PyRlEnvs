@@ -36,11 +36,9 @@ def _nextState(s: np.ndarray, a: int):
 
     p += v
 
-    if p >= 0.5:
-        return np.array([p, v])
-
     if p < -1.2:
-        return np.array([-1.2, 0.0])
+        p = -1.2
+        v = 0
 
     return np.array([p, v])
 

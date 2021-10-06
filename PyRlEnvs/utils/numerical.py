@@ -2,7 +2,7 @@ import numpy as np
 from typing import Callable
 
 def rungeKutta(derivs: Callable[[np.ndarray, float], np.ndarray], y0: np.ndarray, ts: np.ndarray):
-    yout = np.zeros((len(ts), len(y0)))
+    yout = np.zeros((len(ts), len(y0)), dtype=y0.dtype)
 
     yout[0] = y0
 
@@ -21,7 +21,7 @@ def rungeKutta(derivs: Callable[[np.ndarray, float], np.ndarray], y0: np.ndarray
     return yout
 
 def euler(derivs: Callable[[np.ndarray, float], np.ndarray], y0: np.ndarray, ts: np.ndarray):
-    yout = np.zeros((len(ts), len(y0)))
+    yout = np.zeros((len(ts), len(y0)), dtype=y0.dtype)
 
     yout[0] = y0
 
