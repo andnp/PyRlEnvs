@@ -12,7 +12,7 @@ def _dsdt(g: float, m: float, k: float, sa: np.ndarray, t: float):
     p, v, f = sa
 
     # compute derivative of velocity (acc)
-    dv = -g * m * np.cos(3 * p) + (f / m) - k * v
+    dv = -g * np.cos(3 * p) + (f / m) - k * v
 
     return np.array([v, dv, 0.])
 
@@ -47,24 +47,22 @@ class MountainCar(BaseEnvironment):
     # -- Physics --
     # -------------
     physical_constants = {
-        # note due to incorrect integrator in original MC task
-        # it isn't possible to perfectly replicate, so we don't try
-        'gravity': 9.8,
-        'cart_mass': 0.2,
-        'friction': 0.3,
+        'gravity': 0.0025,
+        'cart_mass': 10,
+        'friction': 0.0,
     }
 
     per_step_constants = {
         'dt': DeltaDist(0.1),
-        'force': DeltaDist(2.0),
+        'force': DeltaDist(.1),
     }
 
     randomized_constants = {
         # keep stddev low to prevent overly powerful gravity simulations
         # which can make the problem unsolvable, better to err on easier than impossible
-        'gravity': ClippedGaussian(mean=9.8, stddev=1.0, mi=7.8, ma=11.8),
-        'cart_mass': Uniform(mi=0.1, ma=0.3),
-        'friction': Uniform(mi=0.0, ma=0.6),
+        'gravity': ClippedGaussian(mean=0.0025, stddev=0.001, mi=0.001, ma=0.0035),
+        'cart_mass': Uniform(mi=8.5, ma=11.5),
+        'friction': Uniform(mi=0.0, ma=0.3),
     }
 
     per_step_random_constants = {
@@ -74,7 +72,7 @@ class MountainCar(BaseEnvironment):
 
         # note this isn't clipped, force can flip signs with low probability
         # we use a fairly high stddev to help ensure solvability
-        'force': Gaussian(mean=2.0, stddev=0.75),
+        'force': Gaussian(mean=0.1, stddev=0.02),
     }
 
     def __init__(self, randomize: bool = False, seed: int = 0):

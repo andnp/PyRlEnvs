@@ -38,30 +38,86 @@ class TestMountain(unittest.TestCase):
             self.assertTrue(np.allclose(sp, sp_gym))
             self.assertEqual(env.reward(s, a, sp), r_gym)
 
-    # TODO: openai gym changed their contract to do the integration partially with float32 and partially with float64
-    # it's *really* hard to perfectly match now because the floating point errors will accumulate.
-    # Need to come up with a less flakey test, unfortunately (perhaps not doing monte carlo rollout checking, but state-by-state checking)
+    def test_noCheese(self):
+        # ensure that the always go right policy doesn't trivially solve this domain
+        env = MountainCar()
 
-    # def test_stateful(self):
-    #     env = GymMountainCar(0)
-    #     gym_env: Any = gym.make('MountainCar-v0')
+        for _ in range(50):
+            env.start()
+            for _ in range(50):
+                _, s, t = env.step(2)
+                self.assertFalse(t)
 
-    #     gym_env.seed(0)
-    #     gym_env._max_episode_steps = np.inf
+    def test_bangBang(self):
+        # ensure that the bang-bang policy can still solve the problem
+        env = MountainCar()
 
-    #     t = False
-    #     s = None
-    #     for step in range(5000):
-    #         if step % 1000 == 0 or t:
-    #             s_gym = gym_env.reset()
-    #             s = env.start()
-    #             env._state = s_gym
+        for _ in range(50):
+            s = env.start()
+            t = False
+            for _ in range(500):
+                a = 2 if s[1] >= 0 else 0
 
-    #         a = np.random.choice(env.actions(s))
+                _, s, t = env.step(a)
+                if t:
+                    break
 
-    #         r, sp, t = env.step(a)
-    #         sp_gym, r_gym, t_gym, _ = gym_env.step(a)
+            self.assertTrue(t)
 
-    #         self.assertTrue(np.allclose(sp, sp_gym))
-    #         self.assertEqual(r, r_gym)
-    #         self.assertEqual(t, t_gym)
+    def test_bangBangRandom(self):
+        # ensure that the bang-bang policy can still solve the problem
+        # this guarantees that the first 1000 seeds are solvable
+        for r in range(1000):
+            env = MountainCar(randomize=True, seed=r)
+            s = env.start()
+            t = False
+            for _ in range(500):
+                a = 2 if s[1] >= 0 else 0
+
+                _, s, t = env.step(a)
+                if t:
+                    break
+
+            self.assertTrue(t)
+
+    def test_bangBangGym(self):
+        # ensure that the bang-bang policy can still solve the problem
+        env = GymMountainCar()
+
+        for _ in range(50):
+            s = env.start()
+            t = False
+            for _ in range(500):
+                a = 2 if s[1] >= 0 else 0
+
+                _, s, t = env.step(a)
+                if t:
+                    break
+
+            self.assertTrue(t)
+
+    def test_stateful(self):
+        env = GymMountainCar(0)
+        gym_env: Any = gym.make('MountainCar-v0')
+
+        gym_env.seed(0)
+        gym_env._max_episode_steps = np.inf
+
+        t = False
+        s = None
+        for step in range(5000):
+            if step % 1000 == 0 or t:
+                s_gym = gym_env.reset()
+                s = env.start()
+                env._state = s_gym
+
+            a = np.random.choice(env.actions(s))
+
+            r, sp, t = env.step(a)
+            sp_gym, r_gym, t_gym, _ = gym_env.step(a)
+
+            self.assertTrue(np.allclose(sp, sp_gym))
+            self.assertEqual(r, r_gym)
+            self.assertEqual(t, t_gym)
+
+            env._state = sp_gym
