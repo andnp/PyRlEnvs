@@ -80,6 +80,8 @@ class MountainCar(BaseEnvironment):
         self.randomize = randomize
         self._state = np.array([0, 0])
 
+        self.start_rng = np.random.RandomState(seed)
+
         if randomize:
             self.physical_constants = sampleChildren(self.randomized_constants, self.rng)
             self.per_step_constants = self.per_step_random_constants
@@ -126,7 +128,7 @@ class MountainCar(BaseEnvironment):
         return p >= 0.5
 
     def start(self):
-        position = -0.6 + self.rng.random() * 0.2
+        position = -0.6 + self.start_rng.random() * 0.2
         velocity = 0
 
         start = np.array([position, velocity])

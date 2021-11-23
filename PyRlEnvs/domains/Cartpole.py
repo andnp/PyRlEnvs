@@ -66,6 +66,8 @@ class Cartpole(BaseEnvironment):
         self.randomize = randomize
         self._state = np.zeros(4)
 
+        self.start_rng = np.random.RandomState(seed)
+
         if randomize:
             self.physical_constants = sampleChildren(self.randomized_constants, self.rng)
             self.per_step_constants = self.per_step_random_constants
@@ -111,7 +113,7 @@ class Cartpole(BaseEnvironment):
     # ------------------------
 
     def start(self):
-        start = self.rng.uniform(-0.05, 0.05, size=4)
+        start = self.start_rng.uniform(-0.05, 0.05, size=4)
         self._state = start
         return start
 

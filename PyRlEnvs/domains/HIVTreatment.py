@@ -114,9 +114,9 @@ class HIVTreatment(BaseEnvironment):
         return False
 
     def __init__(self, random_start: float = 0, seed: int = 0):
-        super().__init__()
-        self.rng = np.random.RandomState(seed)
+        super().__init__(seed)
         self.random_start = random_start
+        self.start_rng = np.random.RandomState(seed)
 
         self._state: np.ndarray = np.zeros(6)
 
@@ -124,7 +124,7 @@ class HIVTreatment(BaseEnvironment):
         # perturb the start state multiplicatively by a normal random amount for each component of system
         eps = 1
         if self.random_start > 0:
-            eps = self.rng.normal(1, self.random_start, size=6)
+            eps = self.start_rng.normal(1, self.random_start, size=6)
 
         # start in non-healthy stable state
         start = np.array([163573, 5., 11945, 46, 63919, 24]) * eps
