@@ -12,7 +12,7 @@ setup(
         "RlGlue>=0.3",
         "scipy>=1.5.0",
     ],
-    version='0.25',
+    version='0.26',
     license='MIT',
     description='A handful of fast environments for running RL experiments',
     long_description='todo',
