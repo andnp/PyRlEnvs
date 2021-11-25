@@ -26,7 +26,7 @@ def puddleDist(
 
         # agent parameters
         pos: np.ndarray,
-    ):
+    ) -> float:
     u = (pos - tail)[axis] / length
 
     dist = 0.0
@@ -92,7 +92,8 @@ class PuddleWorld(BaseEnvironment):
 
         self.goal = 1 - self.goal_dimension
 
-    def actions(self, s):
+    @classmethod
+    def actions(cls, s):
         return [UP, DOWN, RIGHT, LEFT]
 
     def start(self):
@@ -105,52 +106,42 @@ class PuddleWorld(BaseEnvironment):
     def _terminal(self):
         return np.all(self.state >= self.goal)
 
-    def _reward(self, x, y, terminal):
+    def _reward(self, state, terminal):
         if terminal:
             return -1.
 
-        reward = -1.
-        dist = self.puddle1.get_distance(x, y)
-        reward += (-400. * dist)
-        dist = self.puddle2.get_distance(x, y)
-        reward += (-400. * dist)
-
+        reward = -1 + self.puddle1(state) * -400 + self.puddle2(state) * -400
         return reward
 
     def step(self, a):
         s = self.state
 
-        xpos = s[0]
-        ypos = s[1]
-
-        n = self.random.normal(scale=self.sigma)
+        n = self.rng.normal(scale=self.sigma)
 
         if a == UP: #up
-            ypos += (self.def_displacement+n)
+            s[1] += (self.def_displacement+n)
         elif a == DOWN: #down
-            ypos -= (self.def_displacement+n)
+            s[1] -= (self.def_displacement+n)
         elif a == RIGHT: #right
-            xpos += (self.def_displacement+n)
+            s[0] += (self.def_displacement+n)
         elif a == LEFT: #left
-            xpos -= (self.def_displacement+n)
+            s[0] -= (self.def_displacement+n)
         else:
             raise Exception()
 
-        if xpos > self.pworld_max_x:
-            xpos = self.pworld_max_x
-        elif xpos < self.pworld_min_x:
-            xpos = self.pworld_min_x
+        if s[0] > 1:
+            s[0] = 1
+        elif s[0] < 0:
+            s[0] = 0
 
-        if ypos > self.pworld_max_y:
-            ypos = self.pworld_max_y
-        elif ypos < self.pworld_min_y:
-            ypos = self.pworld_min_y
+        if s[1] > 1:
+            s[1] = 1
+        elif s[1] < 0:
+            s[1] = 0
 
-        s[0] = xpos
-        s[1] = ypos
         self.state = s
 
         t = self._terminal()
-        r = self._reward(xpos, ypos, t)
+        r = self._reward(s, t)
 
         return (r, np.copy(self.state), t)
