@@ -116,7 +116,7 @@ class HIVTreatment(BaseEnvironment):
     def __init__(self, random_start: float = 0, seed: int = 0):
         super().__init__(seed)
         self.random_start = random_start
-        self.start_rng = np.random.RandomState(seed)
+        self.start_rng = np.random.default_rng(seed)
 
         self._state: np.ndarray = np.zeros(6)
 

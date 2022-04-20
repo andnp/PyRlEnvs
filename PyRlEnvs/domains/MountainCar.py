@@ -80,7 +80,7 @@ class MountainCar(BaseEnvironment):
         self.randomize = randomize
         self._state = np.array([0, 0])
 
-        self.start_rng = np.random.RandomState(seed)
+        self.start_rng = np.random.default_rng(seed)
 
         if randomize:
             self.physical_constants = sampleChildren(self.randomized_constants, self.rng)

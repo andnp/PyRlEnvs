@@ -4,11 +4,11 @@ import numpy as np
 from abc import abstractmethod
 from typing import Dict, Optional, Union
 
-RNG = np.random.RandomState
+RNG = np.random.Generator
 
 class Distribution:
     def __init__(self, rng: Optional[RNG] = None):
-        self.rng = rng or np.random
+        self.rng = rng or np.random.default_rng()
 
     @abstractmethod
     def sample(self, rng: Optional[RNG] = None) -> float:
