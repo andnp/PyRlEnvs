@@ -1,13 +1,13 @@
 import numpy as np
-from numba import njit
 from functools import partial
 
 from PyRlEnvs.Category import addToCategory
 from PyRlEnvs.utils.distributions import ClippedGaussian, DeltaDist, Gamma, Gaussian, Uniform, sampleChildren
 from PyRlEnvs.BaseEnvironment import BaseEnvironment
+from PyRlEnvs.utils.math import try2jit
 from PyRlEnvs.utils.numerical import euler
 
-@njit(cache=True)
+@try2jit
 def _dsdt(g: float, l: float, masspole: float, masscart: float, sa: np.ndarray, t: float):
     polemass_length = masspole * l
     total_mass = masspole + masscart
@@ -23,7 +23,7 @@ def _dsdt(g: float, l: float, masspole: float, masscart: float, sa: np.ndarray, 
 
     return np.array([dx, ddx, dtheta, ddtheta, 0])
 
-@njit(cache=True)
+@try2jit
 def _isTerminal(s: np.ndarray) -> bool:
     x, _, theta, _ = s
     theta_thresh = 12 * 2 * np.pi / 360

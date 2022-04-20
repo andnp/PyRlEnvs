@@ -1,6 +1,7 @@
 from PyRlEnvs.Category import addToCategory
 import numpy as np
 from PyRlEnvs.FiniteDynamics import FiniteDynamics
+from PyRlEnvs.utils.math import try2jit
 
 LEFT = 0
 RIGHT = 1
@@ -71,19 +72,20 @@ RandomWalk = buildRandomWalk(5)
 
 # some utility functions to encode other important parts of the problem spec
 # not necessarily environment specific, but this is as good a place as any to store them
+@try2jit
 def _normRows(m: np.ndarray):
-    return (m.T / np.linalg.norm(m, axis=1)).T
-
+    return (m.T / m.sum(axis=1)).T
 
 """
 Feature representations used in
 TODO: cite <Sutton et al. 2009>
 """
 def invertedFeatures(n: int):
-    I = np.eye(n)
-    m = 1 - I
+    # additive inverse of tabular (hence name)
+    m = 1 - tabularFeatures(n)
     return _normRows(m)
 
+@try2jit
 def dependentFeatures(n: int):
     nfeats = int(np.floor(n / 2) + 1)
     m = np.zeros((n, nfeats))

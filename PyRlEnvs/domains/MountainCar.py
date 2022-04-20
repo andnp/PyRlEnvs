@@ -1,13 +1,12 @@
+import numpy as np
 from functools import partial
 from PyRlEnvs.utils.distributions import ClippedGaussian, DeltaDist, Gamma, Gaussian, Uniform, sampleChildren
-import numpy as np
-from numba import njit
-from PyRlEnvs.utils.math import clip
+from PyRlEnvs.utils.math import clip, try2jit
 from PyRlEnvs.utils.numerical import euler
 from PyRlEnvs.Category import addToCategory
 from PyRlEnvs.BaseEnvironment import BaseEnvironment
 
-@njit(cache=True)
+@try2jit
 def _dsdt(g: float, m: float, k: float, sa: np.ndarray, t: float):
     p, v, f = sa
 
@@ -21,7 +20,7 @@ def _dsdt(g: float, m: float, k: float, sa: np.ndarray, t: float):
 # and see an instantaneous change in velocity *and* position afterwards, should
 # only see change in velocity at this time, then change in position at *next* time
 # keep this around for consistency though
-@njit(cache=True)
+@try2jit
 def _nextState(s: np.ndarray, a: int):
     a = a - 1
     p: float = s[0]

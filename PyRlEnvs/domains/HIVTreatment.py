@@ -23,15 +23,14 @@ A reinforcement learning approach
 In Proceedings of the 45th IEEE Conference on Decision and Control (2006).
 """
 
-from PyRlEnvs.Category import addToCategory
 import numpy as np
-from numba import njit
-from PyRlEnvs.utils.math import clipEach
+from PyRlEnvs.Category import addToCategory
+from PyRlEnvs.utils.math import clipEach, try2jit
 from PyRlEnvs.utils.RandomVariables import DeterministicRandomVariable
 from PyRlEnvs.BaseEnvironment import BaseEnvironment
 from scipy.integrate import solve_ivp
 
-@njit(cache=True)
+@try2jit
 def _dsdt(t: float, sa: np.ndarray):
     # putting these in the method lets numba treat them as constants
     # on the other hand it prevents us from modifying them in derivative classes
@@ -84,7 +83,7 @@ def _nextState(s: np.ndarray, a: int, dt: float, effects: np.ndarray) -> np.ndar
 
     return sp
 
-@njit(cache=True)
+@try2jit
 def _transform(s: np.ndarray) -> np.ndarray:
     return np.log10(s)
 

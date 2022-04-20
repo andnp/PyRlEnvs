@@ -2,17 +2,15 @@
 TODO: find original citation
 """
 
-
+import numpy as np
 from functools import partial
 from PyRlEnvs.utils.distributions import ClippedGaussian, DeltaDist, Gamma, Gaussian, Uniform, sampleChildren
 from PyRlEnvs.Category import addToCategory
-import numpy as np
-from numba import njit
-from PyRlEnvs.utils.math import clip, wrap
+from PyRlEnvs.utils.math import clip, try2jit, wrap
 from PyRlEnvs.utils.numerical import rungeKutta
 from PyRlEnvs.BaseEnvironment import BaseEnvironment
 
-@njit(cache=True)
+@try2jit
 def _dsdt(l1: float, m1: float, m2: float, com1: float, com2: float, g: float, sa: np.ndarray, t: float):
     moi = 1.    # moment of inertia
 
@@ -30,13 +28,13 @@ def _dsdt(l1: float, m1: float, m2: float, com1: float, com2: float, g: float, s
 
     return np.array([dtheta1, dtheta2, ddtheta1, ddtheta2, 0.])
 
-@njit(cache=True)
+@try2jit
 def _transform(s: np.ndarray) -> np.ndarray:
     theta1, theta2, dtheta1, dtheta2 = s
 
     return np.array([np.cos(theta1), np.sin(theta1), np.cos(theta2), np.sin(theta2), dtheta1, dtheta2])
 
-@njit(cache=True)
+@try2jit
 def _isTerminal(s: np.ndarray) -> bool:
     return -np.cos(s[0]) - np.cos(s[1] + s[0]) > 1.
 
