@@ -48,10 +48,8 @@ def buildProblem(eps: float = 0.01, p: Optional[float] = None):
     if p is None:
         p = (2961 + 45240 * eps + 40400 * eps**2) / (4141 + 84840 * eps + 40400 * eps**2)
 
-    probs = immutable(np.array([p, 1. - p]))
-
     def behavior(s: int):
-        return probs
+        return np.array([p, 1. - p])
 
     def target(s: int):
         return np.array([0.5, 0.5])
