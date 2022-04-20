@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from PyRlEnvs.domains.RandomWalk import RandomWalk
+from PyRlEnvs.domains.RandomWalk import RandomWalk, dependentFeatures, invertedFeatures
 
 np.random.seed(0)
 
@@ -113,3 +113,26 @@ class TestRandomWalk(unittest.TestCase):
         expected = np.array([1, 2, 3, 2, 1]) / 9
 
         self.assertTrue(np.allclose(d, expected))
+
+    def test_features(self):
+        got = dependentFeatures(5)
+        expected = np.array([
+            [1,     0,    0], # noqa: E241, E226
+            [1/2, 1/2,    0], # noqa: E241, E226
+            [1/3, 1/3,  1/3], # noqa: E241, E226
+            [0,   1/2,  1/2], # noqa: E241, E226
+            [0,     0,    1], # noqa: E241, E226
+        ])
+
+        self.assertTrue(np.allclose(got, expected))
+
+        got = invertedFeatures(5)
+        expected = np.array([
+            [0,    1/4,  1/4,  1/4,  1/4], # noqa: E241, E226
+            [1/4,    0,  1/4,  1/4,  1/4], # noqa: E241, E226
+            [1/4,  1/4,    0,  1/4,  1/4], # noqa: E241, E226
+            [1/4,  1/4,  1/4,    0,  1/4], # noqa: E241, E226
+            [1/4,  1/4,  1/4,  1/4,    0], # noqa: E241, E226
+        ])
+
+        self.assertTrue(np.allclose(got, expected))
