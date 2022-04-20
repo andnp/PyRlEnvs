@@ -1,8 +1,9 @@
-from PyRlEnvs.FiniteDynamics import FiniteDynamics
-from typing import Any, List, Set
 import numpy as np
+from PyRlEnvs.utils.math import try2FastJit
 import PyRlEnvs.utils.random as Random
-from PyRlEnvs.GridWorld.utils import Coords, getCoords, getState
+from typing import Any, List, Set
+from PyRlEnvs.FiniteDynamics import FiniteDynamics
+from PyRlEnvs.domains.GridWorld.utils import Coords, getCoords, getState
 
 # -------------------
 # Maze generating alg
@@ -153,6 +154,7 @@ class _WilsonMaze(FiniteDynamics):
 
         print('+---' * width + '+')
 
+@try2FastJit
 def neighbors(state: int, shape: Coords):
     x, y = getCoords(state, shape)
 
@@ -163,9 +165,12 @@ def neighbors(state: int, shape: Coords):
         getState((x, y - 1), shape),
     ])
 
+@try2FastJit
 def actions(state: int, next_state: int, shape: Coords):
     x, y = getCoords(state, shape)
-    ret: List[int] = []
+
+    # trick numba into know the type of this empty list
+    ret: List[int] = [i for i in range(0)]
 
     up = getState((x, y + 1), shape)
     if up == next_state:

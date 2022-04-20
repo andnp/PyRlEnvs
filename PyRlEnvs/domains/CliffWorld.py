@@ -1,8 +1,8 @@
 from PyRlEnvs.Category import addToCategory
 import numpy as np
-from PyRlEnvs.GridWorld.Elements import Element, StartState, GoalState
-from PyRlEnvs.GridWorld.utils import Coords, predecessors
-from PyRlEnvs.GridWorld import GridWorldBuilder
+from PyRlEnvs.domains.GridWorld.Elements import Element, StartState, GoalState
+from PyRlEnvs.domains.GridWorld.utils import Coords, predecessors
+from PyRlEnvs.domains.GridWorld import GridWorldBuilder
 
 class Cliff(Element):
     def __init__(self, loc: Coords):

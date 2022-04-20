@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from PyRlEnvs.mazes import Wilson
+from PyRlEnvs.domains.mazes import Wilson
 
 np.random.seed(0)
 

@@ -1,8 +1,8 @@
-from PyRlEnvs.GridWorld.utils import getState, predecessor
 import unittest
 import numpy as np
 from itertools import product
-from PyRlEnvs.GridWorld import GoalState, GridWorldBuilder, StartState, WallState, buildGridWorld
+from PyRlEnvs.domains.GridWorld.utils import getState, predecessor
+from PyRlEnvs.domains.GridWorld import GoalState, GridWorldBuilder, StartState, WallState, buildGridWorld
 
 np.random.seed(0)
 
@@ -31,13 +31,13 @@ class TestGridWorld(unittest.TestCase):
         sp_idx = GridWorld.getState((0, 1))
         sp = GridWorld.nextStates(s_idx, 0)
 
-        self.assertEqual(list(sp), sp_idx)
+        self.assertEqual(list(sp), [sp_idx])
 
         s_idx = GridWorld.getState((0, 0))
         sp_idx = GridWorld.getState((0, 0))
         sp = GridWorld.nextStates(s_idx, 2)
 
-        self.assertEqual(list(sp), sp_idx)
+        self.assertEqual(list(sp), [sp_idx])
 
     def test_reward(self):
         GridWorld = testWorld()
@@ -173,9 +173,9 @@ class TestUtils(unittest.TestCase):
         s = predecessor(sp, 0, shape)
 
         e = sp, getState((3, 2), shape)
-        self.assertEqual(s, e)
+        self.assertEqual(s, list(e))
 
         sp = getState((4, 3), shape)
         s = predecessor(sp, 3, shape)
 
-        self.assertEqual(s, None)
+        self.assertEqual(s, [])
