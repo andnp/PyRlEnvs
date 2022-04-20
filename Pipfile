@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+numpy = ">=1.19.5"
+numba = ">=0.52.0"
+scipy = ">=1.5.4"
+gym = ">=0.18.0"
+rlglue-andnp = "*"
+pygame = "*"
+
+[dev-packages]
+mypy = ">=0.942"
+flake8 = ">=4.0.1"
+commitizen = "*"
+pre-commit = "*"
+pipenv-setup = {extras = ["black"], version = "*"}
+build = "*"
+twine = "*"
+
+[requires]
+python_version = "3.10"

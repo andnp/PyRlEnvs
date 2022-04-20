@@ -2,6 +2,9 @@ __pycache__/
 .vscode/
 *.pyc
 .mypy_cache
+.token
 
 env/
+dist/
+PyRlEnvs_andnp*
 test.py
