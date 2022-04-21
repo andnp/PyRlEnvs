@@ -143,8 +143,8 @@ class HIVTreatment(BaseEnvironment):
     def setState(self, state: np.ndarray):
         self._state = state.copy()
 
-    def copy(self, seed: int):
-        m = HIVTreatment(seed)
+    def copy(self):
+        m = HIVTreatment(self._seed)
         m._state = self._state.copy()
         return m
 

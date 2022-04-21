@@ -1,17 +1,17 @@
 import numpy as np
 from abc import abstractmethod
-from typing import Any, Callable, Generic, Optional, Sequence, TypeVar, Union
-from PyRlEnvs.utils.random import sample
+from typing import Any, Callable, Generic, Optional, Sequence, TypeVar, Union, cast
+from PyRlEnvs.utils.random import NpArray, sample
 
 T = TypeVar('T')
 
 FloatArray = Union[Sequence[float], np.ndarray]
-RNG = np.random.RandomState
+RNG = np.random.Generator
 
 class RandomVariable(Generic[T]):
     def __init__(self, rng: Optional[RNG] = None):
         if rng is None:
-            rng = np.random.RandomState
+            rng = np.random.default_rng()
 
         self.rng: RNG = rng
 
@@ -44,7 +44,7 @@ class DiscreteRandomVariable(RandomVariable[T]):
         self.vals = vals
         self.probs = probs
 
-    def sample(self, rng: Optional[RNG] = None):
+    def sample(self, rng: Optional[RNG] = None) -> T:
         rng = self._rng(rng)
         idx = sample(self.probs, rng)
         return self.vals[idx]
@@ -53,8 +53,9 @@ class DiscreteRandomVariable(RandomVariable[T]):
         return self.vals.__iter__()
 
     @staticmethod
-    def fromProbs(probs: Sequence[float], rng: Optional[RNG] = None):
-        return DiscreteRandomVariable[int](np.arange(len(probs)), probs, rng)
+    def fromProbs(probs: NpArray, rng: Optional[RNG] = None):
+        vals = cast(Sequence[int], np.arange(len(probs)))
+        return DiscreteRandomVariable[int](vals, probs, rng)
 
     @staticmethod
     def fromUniform(vals: Sequence[T], rng: Optional[RNG] = None):

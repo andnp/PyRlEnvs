@@ -31,7 +31,7 @@ class TestBairdCounterexample(unittest.TestCase):
         self.assertEqual(s, 6)
 
         r, sp, t = env.step(0)
-        self.assertEqual(sp, 4)
+        self.assertEqual(sp, 1)
         self.assertEqual(r, 0)
         self.assertFalse(t)
 
@@ -49,7 +49,7 @@ class TestBairdCounterexample(unittest.TestCase):
 
         P = BairdCounterexample.constructTransitionMatrix(behaviorPolicy)
         E = np.zeros((7, 7))
-        E[:, :] = 1/7
+        E[:, :] = 1 / 7
 
         self.assertTrue(np.allclose(P, E))
 

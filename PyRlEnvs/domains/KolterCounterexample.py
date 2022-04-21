@@ -3,10 +3,10 @@ TODO:
 From <cite Kolter>
 """
 
+import numpy as np
+from typing import Optional
 from PyRlEnvs.utils.math import immutable
 from PyRlEnvs.Category import addToCategory
-from typing import Optional
-import numpy as np
 from PyRlEnvs.FiniteDynamics import FiniteDynamics
 
 S1 = 0
@@ -48,16 +48,18 @@ def buildProblem(eps: float = 0.01, p: Optional[float] = None):
     if p is None:
         p = (2961 + 45240 * eps + 40400 * eps**2) / (4141 + 84840 * eps + 40400 * eps**2)
 
+    mu = immutable(np.array([p, 1 - p]))
     def behavior(s: int):
-        return np.array([p, 1. - p])
+        return mu
 
+    pi = immutable(np.array([0.5, 0.5]))
     def target(s: int):
-        return np.array([0.5, 0.5])
+        return pi
 
-    X = np.array([
+    X = immutable(np.array([
         [1],
         [1.05 + eps],
-    ])
+    ]))
 
     gamma = 0.99
 

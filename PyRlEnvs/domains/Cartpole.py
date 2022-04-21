@@ -129,8 +129,8 @@ class Cartpole(BaseEnvironment):
     def setState(self, state: np.ndarray):
         self._state = state.copy()
 
-    def copy(self, seed: int):
-        m = Cartpole(randomize=self.randomize, seed=seed)
+    def copy(self):
+        m = Cartpole(randomize=self.randomize, seed=self._seed)
         m._state = self._state.copy()
         m.physical_constants = self.physical_constants
         m.per_step_constants = self.per_step_constants

@@ -1,11 +1,13 @@
+from __future__ import annotations
 import numpy as np
+import RlGlue
 from abc import abstractmethod
 from typing import Any
-import RlGlue
 
 
 class BaseEnvironment(RlGlue.BaseEnvironment):
     def __init__(self, seed: int = 0):
+        self._seed = seed
         self.rng = np.random.default_rng(seed)
 
     @abstractmethod
@@ -13,5 +15,5 @@ class BaseEnvironment(RlGlue.BaseEnvironment):
         pass
 
     @abstractmethod
-    def copy(self, seed: int = 0) -> RlGlue.BaseEnvironment:
+    def copy(self) -> BaseEnvironment:
         pass
