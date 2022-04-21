@@ -3,8 +3,6 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as f:
     long_description = f.read()
 
-print(find_packages(exclude=["tests*", "scripts*"]))
-
 setup(
     name='PyRlEnvs-andnp',
     url='https://github.com/andnp/PyRlEnvs.git',
