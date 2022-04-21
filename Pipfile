@@ -7,17 +7,17 @@ name = "pypi"
 numpy = ">=1.19.5"
 numba = ">=0.52.0"
 scipy = ">=1.5.4"
-gym = ">=0.18.0"
 rlglue-andnp = "*"
-pygame = "*"
 
 [dev-packages]
+build = "*"
+commitizen = "*"
 mypy = ">=0.942"
 flake8 = ">=4.0.1"
-commitizen = "*"
+gym = ">=0.18.0"
 pre-commit = "*"
+pygame = "*"
 pipenv-setup = {extras = ["black"], version = "*"}
-build = "*"
 twine = "*"
 
 [requires]

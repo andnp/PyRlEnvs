@@ -3,12 +3,15 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as f:
     long_description = f.read()
 
+print(find_packages(exclude=['tests*', 'scripts*']))
+
 setup(
     name='PyRlEnvs',
     url='https://github.com/andnp/PyRlEnvs.git',
     author='Andy Patterson',
     author_email='andnpatterson@gmail.com',
     packages=find_packages(exclude=['tests*', 'scripts*']),
+    package_data={"PyRlEnvs": ["py.typed"]},
     version='1.0.0',
     license='MIT',
     description='A handful of fast environments for running RL experiments',
