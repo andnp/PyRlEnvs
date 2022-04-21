@@ -1,7 +1,7 @@
-from PyRlEnvs.Category import addToCategory
 import numpy as np
-from PyRlEnvs.GridWorld.Elements import Element, WallState
-from PyRlEnvs.GridWorld import GridWorldBuilder
+from PyRlEnvs.Category import addToCategory
+from PyRlEnvs.domains.GridWorld.Elements import Element, WallState
+from PyRlEnvs.domains.GridWorld import GridWorldBuilder
 
 class UniformStart(Element):
     def apply(self, d0: np.ndarray, K: np.ndarray, T: np.ndarray, R: np.ndarray):
