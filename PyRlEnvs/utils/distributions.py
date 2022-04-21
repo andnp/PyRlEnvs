@@ -60,7 +60,7 @@ class DeltaDist(Distribution):
 
         self.value = val
 
-    def sample(self, rng: Optional[RNG]) -> float:
+    def sample(self, rng: Optional[RNG] = None) -> float:
         return self.value
 
 class Gaussian(Distribution):

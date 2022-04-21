@@ -1,6 +1,5 @@
 from PyRlEnvs.utils.RandomVariables import DiscreteRandomVariable
-from abc import abstractmethod
-from typing import Callable, Optional
+from typing import Callable, Optional, Sequence, cast
 import numpy as np
 from numba import njit
 from PyRlEnvs.BaseEnvironment import BaseEnvironment
@@ -50,15 +49,15 @@ class FiniteDynamics(BaseEnvironment):
 
     # transition kernel
     # shape: (states, actions, states)
-    K = np.zeros(0)
+    K = np.zeros(())
 
     # reward kernel
     # shape: (states, actions, states)
-    Rs = np.zeros(0)
+    Rs = np.zeros(())
 
     # termination kernel
     # shape: (states, actions, states)
-    T = np.zeros(0)
+    T = np.zeros(())
 
     num_states = 0
     num_actions = 0
@@ -71,6 +70,7 @@ class FiniteDynamics(BaseEnvironment):
     @classmethod
     def nextStates(cls, s: int, a: int):
         sp = _nextStates(cls.K, s, a)
+        sp = cast(Sequence[int], sp)
         return DiscreteRandomVariable(sp, cls.K[s, a, sp])
 
     @classmethod
@@ -106,10 +106,9 @@ class FiniteDynamics(BaseEnvironment):
     def __init__(self, seed: int = 0):
         super().__init__()
 
-        self.rng = np.random.RandomState(seed)
+        self.rng = np.random.default_rng(seed)
         self.state: int = 0
 
-    @abstractmethod
     def start(self):
         self.state = sample(self.d0, self.rng)
         return self.state
@@ -126,8 +125,8 @@ class FiniteDynamics(BaseEnvironment):
     def setState(self, state: int):
         self.state = state
 
-    def copy(self, seed: int):
-        c = self.__class__(seed)
+    def copy(self):
+        c = self.__class__(self._seed)
         c.state = self.state
 
         return c
