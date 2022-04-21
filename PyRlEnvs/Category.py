@@ -1,4 +1,4 @@
-from typing import Dict, Iterator, List, Optional, NamedTuple, Sequence, Type
+from typing import Dict, Iterator, List, Optional, NamedTuple, Type
 from PyRlEnvs.BaseEnvironment import BaseEnvironment
 
 class EnvironmentMetadata(NamedTuple):
@@ -9,7 +9,7 @@ class EnvironmentMetadata(NamedTuple):
 
 # TODO: generate documentation based off of this information
 # TODO: generate experiment descriptions based off of this (not in this repo, but this is best place to store this todo right now)
-class Category(Sequence[EnvironmentMetadata]):
+class Category:
     def __init__(self, name: str, description: Optional[str] = None):
         self.name = name
         self.description = description
