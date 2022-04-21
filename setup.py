@@ -6,11 +6,11 @@ with open("README.md", "r") as f:
 print(find_packages(exclude=["tests*", "scripts*"]))
 
 setup(
-    name="PyRlEnvs",
-    url="https://github.com/andnp/PyRlEnvs.git",
-    author="Andy Patterson",
-    author_email="andnpatterson@gmail.com",
-    packages=find_packages(exclude=["tests*", "scripts*"]),
+    name='PyRlEnvs-andnp',
+    url='https://github.com/andnp/PyRlEnvs.git',
+    author='Andy Patterson',
+    author_email='andnpatterson@gmail.com',
+    packages=find_packages(exclude=['tests*', 'scripts*']),
     package_data={"PyRlEnvs": ["py.typed"]},
     version="1.1.0",
     license="MIT",
