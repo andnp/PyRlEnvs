@@ -5,44 +5,6 @@ from numba import njit
 from PyRlEnvs.BaseEnvironment import BaseEnvironment
 from PyRlEnvs.utils.random import sample
 
-@njit(cache=True)
-def _actions(K: np.ndarray, s: int):
-    return np.unique(np.where(K[s] != 0)[0])
-
-@njit(cache=True)
-def _nextStates(K: np.ndarray, s: int, a: int):
-    return np.where(K[s, a] > 0)[0]
-
-@njit(cache=True)
-def _transitionMatrix(K: np.ndarray, T: np.ndarray, pi: np.ndarray, gamma: float):
-    states = pi.shape[0]
-    P = np.zeros((states, states))
-
-    g: np.ndarray = (1 - T) * gamma
-    if gamma < 0:
-        g = np.ones_like(T)
-
-    for s in range(states):
-        for sp in range(states):
-            P[s, sp] = np.sum(K[s, :, sp] * pi[s] * g[s, :, sp])
-
-    return P
-
-@njit(cache=True)
-def _averageReward(K: np.ndarray, Rs: np.ndarray, pi: np.ndarray):
-    states = pi.shape[0]
-
-    R = np.zeros(states)
-    for s in range(states):
-        for sp in range(states):
-            R[s] += np.sum(K[s, :, sp] * Rs[s, :, sp] * pi[s])
-
-    return R
-
-@njit(cache=True)
-def _stateDistribution(P: np.ndarray):
-    return np.linalg.matrix_power(P, 1024).sum(axis=0) / P.shape[0]
-
 class FiniteDynamics(BaseEnvironment):
     # start state dist
     d0 = np.zeros(0)
@@ -61,6 +23,42 @@ class FiniteDynamics(BaseEnvironment):
 
     num_states = 0
     num_actions = 0
+
+    # ----------------------
+    # -- RLGlue Interface --
+    # ----------------------
+
+    def __init__(self, seed: int = 0):
+        super().__init__()
+
+        self.rng = np.random.default_rng(seed)
+        self.state: int = 0
+
+    def start(self):
+        self.state = sample(self.d0, self.rng)
+        return self.state
+
+    def step(self, action: int):
+        sp = self.nextStates(self.state, action).sample(self.rng)
+        r = self.reward(self.state, action, sp)
+        t = self.terminal(self.state, action, sp)
+
+        self.state = sp
+
+        return (r, self.state, t)
+
+    def setState(self, state: int):
+        self.state = state
+
+    def copy(self):
+        c = self.__class__(self._seed)
+        c.state = self.state
+
+        return c
+
+    # -------------------------
+    # -- Stateless Interface --
+    # -------------------------
 
     @classmethod
     def actions(cls, s: int):
@@ -103,30 +101,44 @@ class FiniteDynamics(BaseEnvironment):
         P = cls.constructTransitionMatrix(policy)
         return _stateDistribution(P)
 
-    def __init__(self, seed: int = 0):
-        super().__init__()
+# ----------------------------
+# -- Jit Compiled Utilities --
+# ----------------------------
 
-        self.rng = np.random.default_rng(seed)
-        self.state: int = 0
+@njit(cache=True)
+def _actions(K: np.ndarray, s: int):
+    return np.unique(np.where(K[s] != 0)[0])
 
-    def start(self):
-        self.state = sample(self.d0, self.rng)
-        return self.state
+@njit(cache=True)
+def _nextStates(K: np.ndarray, s: int, a: int):
+    return np.where(K[s, a] > 0)[0]
 
-    def step(self, action: int):
-        sp = self.nextStates(self.state, action).sample(self.rng)
-        r = self.reward(self.state, action, sp)
-        t = self.terminal(self.state, action, sp)
+@njit(cache=True)
+def _transitionMatrix(K: np.ndarray, T: np.ndarray, pi: np.ndarray, gamma: float):
+    states = pi.shape[0]
+    P = np.zeros((states, states))
 
-        self.state = sp
+    g: np.ndarray = (1 - T) * gamma
+    if gamma < 0:
+        g = np.ones_like(T)
 
-        return (r, self.state, t)
+    for s in range(states):
+        for sp in range(states):
+            P[s, sp] = np.sum(K[s, :, sp] * pi[s] * g[s, :, sp])
 
-    def setState(self, state: int):
-        self.state = state
+    return P
 
-    def copy(self):
-        c = self.__class__(self._seed)
-        c.state = self.state
+@njit(cache=True)
+def _averageReward(K: np.ndarray, Rs: np.ndarray, pi: np.ndarray):
+    states = pi.shape[0]
 
-        return c
+    R = np.zeros(states)
+    for s in range(states):
+        for sp in range(states):
+            R[s] += np.sum(K[s, :, sp] * Rs[s, :, sp] * pi[s])
+
+    return R
+
+@njit(cache=True)
+def _stateDistribution(P: np.ndarray):
+    return np.linalg.matrix_power(P, 1024).sum(axis=0) / P.shape[0]

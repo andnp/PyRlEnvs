@@ -10,7 +10,7 @@ from PyRlEnvs.domains.GridWorld.utils import Coords, getCoords, getState
 # -------------------
 
 def sample(_shape: Coords, costToGoal: bool = True, seed: int = 0):
-    rng = np.random.RandomState(seed)
+    rng = np.random.default_rng(seed)
 
     # collect some metadata
     width, height = _shape

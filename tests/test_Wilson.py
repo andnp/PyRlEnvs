@@ -7,15 +7,15 @@ np.random.seed(0)
 # Wilson.sample((5, 5), seed=0)
 """
 +---+---+---+---+---+
-|       |           |
-+   +   +   +   +---+
-|   |       |       |
-+   +   +---+   +---+
-|   |       |       |
+|                   |
 +---+   +---+---+   +
+|       |       |   |
++   +---+   +---+   +
+|   |   |   |       |
++---+   +   +---+   +
 |       |   |   |   |
-+   +   +   +   +   +
-|   |           |   |
++---+   +   +   +   +
+|                   |
 +---+---+---+---+---+
 """
 
@@ -33,62 +33,47 @@ class WilsonTest(unittest.TestCase):
         self.assertEqual(Maze.getCoords(sp), (0, 0))
         self.assertFalse(t)
 
-        r, sp, t = maze.step(1)
+        r, sp, t = maze.step(3)
         self.assertEqual(r, -1)
         self.assertEqual(Maze.getCoords(sp), (0, 0))
         self.assertFalse(t)
 
-        r, sp, t = maze.step(0)
+        r, sp, t = maze.step(1)
         self.assertEqual(r, -1)
-        self.assertEqual(Maze.getCoords(sp), (0, 1))
-        self.assertFalse(t)
-
-        r, sp, t = maze.step(3)
-        self.assertEqual(r, -1)
-        self.assertEqual(Maze.getCoords(sp), (0, 1))
+        self.assertEqual(Maze.getCoords(sp), (1, 0))
         self.assertFalse(t)
 
         r, sp, t = maze.step(1)
         self.assertEqual(r, -1)
-        self.assertEqual(Maze.getCoords(sp), (1, 1))
-        self.assertFalse(t)
-
-        r, sp, t = maze.step(3)
-        self.assertEqual(r, -1)
-        self.assertEqual(Maze.getCoords(sp), (0, 1))
+        self.assertEqual(Maze.getCoords(sp), (2, 0))
         self.assertFalse(t)
 
         r, sp, t = maze.step(1)
         self.assertEqual(r, -1)
-        self.assertEqual(Maze.getCoords(sp), (1, 1))
+        self.assertEqual(Maze.getCoords(sp), (3, 0))
+        self.assertFalse(t)
+
+        r, sp, t = maze.step(1)
+        self.assertEqual(r, -1)
+        self.assertEqual(Maze.getCoords(sp), (4, 0))
         self.assertFalse(t)
 
         r, sp, t = maze.step(0)
         self.assertEqual(r, -1)
-        self.assertEqual(Maze.getCoords(sp), (1, 2))
+        self.assertEqual(Maze.getCoords(sp), (4, 1))
         self.assertFalse(t)
 
         r, sp, t = maze.step(0)
         self.assertEqual(r, -1)
-        self.assertEqual(Maze.getCoords(sp), (1, 3))
-        self.assertFalse(t)
-
-        r, sp, t = maze.step(1)
-        self.assertEqual(r, -1)
-        self.assertEqual(Maze.getCoords(sp), (2, 3))
+        self.assertEqual(Maze.getCoords(sp), (4, 2))
         self.assertFalse(t)
 
         r, sp, t = maze.step(0)
         self.assertEqual(r, -1)
-        self.assertEqual(Maze.getCoords(sp), (2, 4))
+        self.assertEqual(Maze.getCoords(sp), (4, 3))
         self.assertFalse(t)
 
-        r, sp, t = maze.step(1)
-        self.assertEqual(r, -1)
-        self.assertEqual(Maze.getCoords(sp), (3, 4))
-        self.assertFalse(t)
-
-        r, sp, t = maze.step(1)
+        r, sp, t = maze.step(0)
         self.assertEqual(r, -1)
         self.assertEqual(Maze.getCoords(sp), (4, 4))
         self.assertTrue(t)

@@ -15,26 +15,29 @@ class TestAcrobot(unittest.TestCase):
         r = env.reward(np.zeros(0), 0, np.zeros(0))
         self.assertEqual(r, -1)
 
+    # TODO: this fails with modern gym code, they've made several changes
+    # to the rng and floating-point precision
     # def test_stateful(self):
     #     env = Acrobot(seed=0)
-    #     gym_env: Any = gym.make('Acrobot-v1')
-
-    #     gym_env.seed(0)
-    #     gym_env._max_episode_steps = np.inf
+    #     rng = np.random.default_rng(0)
 
     #     t = False
+    #     s = None
+    #     with open('tests/data/test_acrobot.pkl', 'rb') as f:
+    #         expected = pickle.load(f)
+
     #     for step in range(5000):
-    #         if step % 1000 == 0 or t:
-    #             gym_env.reset()
-    #             env.start()
-    #             s_ = gym_env.state
-    #             env.setState(s_)
+    #         if step % 521 == 0 or t:
+    #             s = env.start()
 
-    #         a = np.random.choice(env.actions(np.zeros(0)))
-
+    #         a = choice(env.actions(np.zeros(0)), rng)
     #         r, sp, t = env.step(a)
-    #         sp_gym, r_gym, t_gym, _ = gym_env.step(a)
 
-    #         self.assertTrue(np.allclose(sp, sp_gym))
-    #         self.assertEqual(t, t_gym)
-    #         self.assertEqual(r, r_gym)
+    #         s = sp
+
+    #         es, ea, er, esp, et = expected[step]
+    #         self.assertTrue(np.all(s == es))
+    #         self.assertEqual(a, ea)
+    #         self.assertEqual(r, er)
+    #         self.assertTrue(np.all(sp == esp))
+    #         self.assertEqual(t, et)

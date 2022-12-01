@@ -94,6 +94,7 @@ class Gamma(Distribution):
     def sample(self, rng: Optional[RNG] = None):
         return self._rng(rng).gamma(self.shape, self.scale)
 
+# TODO: well this is wrong... Should use rejection sampling
 class ClippedGaussian(Gaussian):
     def __init__(self, mean: float, stddev: float, mi: float, ma: Optional[float] = None, rng: Optional[RNG] = None):
         super().__init__(mean, stddev, rng)

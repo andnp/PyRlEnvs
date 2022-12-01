@@ -4,11 +4,11 @@ TODO: find original citation
 
 import numpy as np
 from functools import partial
-from PyRlEnvs.utils.distributions import ClippedGaussian, DeltaDist, Gamma, Gaussian, Uniform, sampleChildren
 from PyRlEnvs.Category import addToCategory
 from PyRlEnvs.utils.math import clip, try2jit, wrap
 from PyRlEnvs.utils.numerical import rungeKutta
 from PyRlEnvs.BaseEnvironment import BaseEnvironment
+from PyRlEnvs.utils.random import makeSampler, sampleDict, truncatedGaussian, uniform, gamma, gaussian
 
 @try2jit
 def _dsdt(l1: float, m1: float, m2: float, com1: float, com2: float, g: float, sa: np.ndarray, t: float):
@@ -53,39 +53,38 @@ class Acrobot(BaseEnvironment):
     }
 
     per_step_constants = {
-        'dt': DeltaDist(0.2),
-        'force': DeltaDist(1.0),
+        'dt': 0.2,
+        'force': 1.0,
     }
 
     randomized_constants = {
-        'gravity': ClippedGaussian(mean=9.8, stddev=2.0, mi=5.0, ma=13.8),
-        'link1_length': Uniform(mi=0.75, ma=1.25),
-        'link1_mass': Uniform(mi=0.75, ma=1.25),
-        'link1_com': ClippedGaussian(mean=0.5, stddev=0.1, mi=0.3, ma=0.7),
+        'gravity': makeSampler(lambda: truncatedGaussian(mean=9.8, stddev=2.0, mi=5.0, ma=13.8)),
+        'link1_length': makeSampler(lambda: uniform(0.75, 1.25)),
+        'link1_mass': makeSampler(lambda: uniform(0.75, 1.25)),
+        'link1_com': makeSampler(lambda: truncatedGaussian(mean=0.5, stddev=0.1, mi=0.3, ma=0.7)),
         # link2 length is fixed
-        'link2_mass': Uniform(mi=0.75, ma=1.25),
-        'link2_com': ClippedGaussian(mean=0.5, stddev=0.1, mi=0.3, ma=0.7),
+        'link2_mass': makeSampler(lambda: uniform(0.75, 1.25)),
+        'link2_com': makeSampler(lambda: truncatedGaussian(mean=0.5, stddev=0.1, mi=0.3, ma=0.7)),
     }
 
     per_step_random_constants = {
         # use clipped gaussian to enforce a lower-bound constraint on how fast we can sample
         # realistically, we can see very long delays but we can never sample faster than the equipment allows
-        'dt': 0.99 * ClippedGaussian(mean=0.2, stddev=0.02, mi=0.125) + 0.01 * Gamma(shape=0.1, scale=2.0),
+        'dt': makeSampler(lambda: 0.99 * truncatedGaussian(mean=0.2, stddev=0.02, mi=0.125) + 0.01 * gamma(shape=0.1, scale=2.0)),
 
         # note this isn't clipped, force can flip signs with low probability
-        'force': Gaussian(mean=1.0, stddev=0.4),
+        'force': makeSampler(lambda: gaussian(1.0, 0.5)),
     }
 
-    def __init__(self, randomize: bool = False, seed: int = 0):
+    def __init__(self, random_init: bool = False, seed: int = 0):
         super().__init__(seed)
-        self.randomize = randomize
+        self.random_init = random_init
         self._state = np.zeros(4)
 
         self.start_rng = np.random.default_rng(seed)
 
-        if randomize:
-            self.physical_constants = sampleChildren(self.randomized_constants, self.rng)
-            self.per_step_constants = self.per_step_random_constants
+        if random_init:
+            self.physical_constants = sampleDict(self.randomized_constants, self.rng)
 
         self._dsdt = partial(_dsdt,
             self.physical_constants['link1_length'],
@@ -101,8 +100,8 @@ class Acrobot(BaseEnvironment):
     # -------------------------
 
     def nextState(self, s: np.ndarray, a: float):
-        dt = self.per_step_constants['dt'].sample(self.rng)
-        force = self.per_step_constants['force'].sample(self.rng)
+        dt = self.per_step_constants['dt']
+        force = self.per_step_constants['force']
 
         a = (a - 1.) * force
 
@@ -155,7 +154,7 @@ class Acrobot(BaseEnvironment):
         self._state = state.copy()
 
     def copy(self):
-        m = Acrobot(randomize=self.randomize, seed=self._seed)
+        m = Acrobot(random_init=self.random_init, seed=self._seed)
         m._state = self._state.copy()
         m.physical_constants = self.physical_constants
         m.per_step_constants = self.per_step_constants
@@ -166,8 +165,8 @@ class Acrobot(BaseEnvironment):
         return m
 
 class StochasticAcrobot(Acrobot):
-    def __init__(self, seed: int = 0):
-        super().__init__(randomize=True, seed=seed)
+    def __init__(self, random_init: bool = True, seed: int = 0):
+        super().__init__(random_init, seed=seed)
 
 addToCategory('classic-control', Acrobot)
 addToCategory('stochastic', StochasticAcrobot)

@@ -100,14 +100,15 @@ class TestMountain(unittest.TestCase):
         env = GymMountainCar(0)
         gym_env: Any = gym.make('MountainCar-v0')
 
-        gym_env.seed(0)
         gym_env._max_episode_steps = np.inf
 
         t = False
         s = None
+        seed = 0
         for step in range(5000):
             if step % 1000 == 0 or t:
-                s_gym = gym_env.reset()
+                s_gym = gym_env.reset(seed=seed)
+                seed += 1
                 s = env.start()
                 env._state = s_gym
 

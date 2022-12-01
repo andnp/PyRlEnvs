@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Callable, Sequence, List
+from typing import Sequence, List
 from PyRlEnvs.FiniteDynamics import FiniteDynamics
 from .Elements import Element
 from .utils import Coords, findFirstTrigger, getState, getCoords
@@ -43,8 +43,13 @@ class _BaseGridWorld(FiniteDynamics):
     shape: Coords
     elements: List[Element]
 
-    getState: Callable[[Coords], int]
-    getCoords: Callable[[int], Coords]
+    @classmethod
+    def getState(cls, c: Coords) -> int:
+        return getState(c, cls.shape)
+
+    @classmethod
+    def getCoords(cls, s: int) -> Coords:
+        return getCoords(s, cls.shape)
 
     def addElement(self, element: Element):
         element.init(self.shape)
@@ -154,8 +159,5 @@ def buildGridWorld(builder: GridWorldBuilder):
         Rs = _R
         T = _T
         d0 = _d0
-
-        getState = _getState
-        getCoords = _getCoords
 
     return GridWorld
