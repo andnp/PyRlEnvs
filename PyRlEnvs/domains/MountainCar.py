@@ -140,9 +140,11 @@ class MountainCar(BaseEnvironment):
         r = self.reward(self._state, action, sp)
         t = self.terminal(self._state, action, sp)
 
+        gamma = 0.0 if t else 1.0
+
         self._state = sp
 
-        return (r, sp.copy(), t)
+        return (r, sp.copy(), t, {'gamma': gamma})
 
     def setState(self, state: np.ndarray):
         self._state = state.copy()

@@ -23,7 +23,7 @@ class TestHIV(unittest.TestCase):
         expected = np.log10([163573, 5., 11945, 46, 63919, 24])
         self.assertTrue(np.allclose(s, expected))
 
-        r, sp, t = env.step(2)
+        r, sp, t, _ = env.step(2)
         self.assertTrue(np.allclose(sp, [5.26640187, 1.20553485, 3.69160487, 1.62827991, 4.26513502, 1.38600307]))
         self.assertTrue(np.allclose(r, 22300.86788001542, rtol=1e-8))
         self.assertFalse(t)

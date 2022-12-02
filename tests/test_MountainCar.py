@@ -45,7 +45,7 @@ class TestMountain(unittest.TestCase):
         for _ in range(50):
             env.start()
             for _ in range(50):
-                _, s, t = env.step(2)
+                _, s, t, _ = env.step(2)
                 self.assertFalse(t)
 
     def test_bangBang(self):
@@ -58,7 +58,7 @@ class TestMountain(unittest.TestCase):
             for _ in range(500):
                 a = 2 if s[1] >= 0 else 0
 
-                _, s, t = env.step(a)
+                _, s, t, _ = env.step(a)
                 if t:
                     break
 
@@ -74,7 +74,7 @@ class TestMountain(unittest.TestCase):
             for _ in range(500):
                 a = 2 if s[1] >= 0 else 0
 
-                _, s, t = env.step(a)
+                _, s, t, _ = env.step(a)
                 if t:
                     break
 
@@ -90,7 +90,7 @@ class TestMountain(unittest.TestCase):
             for _ in range(500):
                 a = 2 if s[1] >= 0 else 0
 
-                _, s, t = env.step(a)
+                _, s, t, _ = env.step(a)
                 if t:
                     break
 
@@ -114,7 +114,7 @@ class TestMountain(unittest.TestCase):
 
             a = np.random.choice(env.actions(s))
 
-            r, sp, t = env.step(a)
+            r, sp, t, _ = env.step(a)
             sp_gym, r_gym, t_gym, _, _ = gym_env.step(a)
 
             self.assertTrue(np.allclose(sp, sp_gym))

@@ -18,44 +18,44 @@ class TestCliffWorld(unittest.TestCase):
         s = env.start()
         self.assertEqual(s, Env.getState((0, 0)))
 
-        r, sp, t = env.step(LEFT)
+        r, sp, t, _ = env.step(LEFT)
         self.assertEqual(r, -1)
         self.assertEqual(sp, Env.getState((0, 0)))
         self.assertFalse(t)
 
-        r, sp, t = env.step(RIGHT)
+        r, sp, t, _ = env.step(RIGHT)
         self.assertEqual(r, -100)
         self.assertEqual(sp, Env.getState((0, 0)))
         self.assertFalse(t)
 
-        r, sp, t = env.step(UP)
+        r, sp, t, _ = env.step(UP)
         self.assertEqual(r, -1)
         self.assertEqual(sp, Env.getState((0, 1)))
         self.assertFalse(t)
 
         for x in range(3):
-            r, sp, t = env.step(RIGHT)
+            r, sp, t, _ = env.step(RIGHT)
             self.assertEqual(r, -1)
             self.assertEqual(sp, Env.getState((x + 1, 1)))
             self.assertFalse(t)
 
-        r, sp, t = env.step(DOWN)
+        r, sp, t, _ = env.step(DOWN)
         self.assertEqual(r, -100)
         self.assertEqual(sp, Env.getState((0, 0)))
         self.assertFalse(t)
 
-        r, sp, t = env.step(UP)
+        r, sp, t, _ = env.step(UP)
         self.assertEqual(r, -1)
         self.assertEqual(sp, Env.getState((0, 1)))
         self.assertFalse(t)
 
         for x in range(4):
-            r, sp, t = env.step(RIGHT)
+            r, sp, t, _ = env.step(RIGHT)
             self.assertEqual(r, -1)
             self.assertEqual(sp, Env.getState((x + 1, 1)))
             self.assertFalse(t)
 
-        r, sp, t = env.step(DOWN)
+        r, sp, t, _ = env.step(DOWN)
         self.assertEqual(r, -1)
         self.assertEqual(sp, Env.getState((4, 0)))
         self.assertTrue(t)

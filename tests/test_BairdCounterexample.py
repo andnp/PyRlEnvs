@@ -30,12 +30,12 @@ class TestBairdCounterexample(unittest.TestCase):
         s = env.start()
         self.assertEqual(s, 6)
 
-        r, sp, t = env.step(0)
+        r, sp, t, _ = env.step(0)
         self.assertEqual(sp, 1)
         self.assertEqual(r, 0)
         self.assertFalse(t)
 
-        r, sp, t = env.step(1)
+        r, sp, t, _ = env.step(1)
         self.assertEqual(sp, 6)
         self.assertEqual(r, 0)
         self.assertFalse(t)

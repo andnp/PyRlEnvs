@@ -136,9 +136,11 @@ class HIVTreatment(BaseEnvironment):
         r = HIVTreatment.reward(self._state, action, sp)
         t = HIVTreatment.terminal(self._state, action, sp)
 
+        gamma = 0.0 if t else 1.0
+
         self._state = sp
 
-        return (r, _transform(sp), t)
+        return (r, _transform(sp), t, {'gamma': gamma})
 
     def setState(self, state: np.ndarray):
         self._state = state.copy()

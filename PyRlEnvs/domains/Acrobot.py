@@ -148,7 +148,9 @@ class Acrobot(BaseEnvironment):
 
         self._state = sp
 
-        return (r, _transform(sp), t)
+        gamma = 0.0 if t else 1.0
+
+        return (r, _transform(sp), t, {'gamma': gamma})
 
     def setState(self, state: np.ndarray):
         self._state = state.copy()

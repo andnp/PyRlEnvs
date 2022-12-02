@@ -1,7 +1,7 @@
-from PyRlEnvs.utils.RandomVariables import DiscreteRandomVariable
-from typing import Callable, Optional, Sequence, cast
 import numpy as np
 from numba import njit
+from typing import Callable, Optional, Sequence, cast
+from PyRlEnvs.utils.RandomVariables import DiscreteRandomVariable
 from PyRlEnvs.BaseEnvironment import BaseEnvironment
 from PyRlEnvs.utils.random import sample
 
@@ -43,9 +43,11 @@ class FiniteDynamics(BaseEnvironment):
         r = self.reward(self.state, action, sp)
         t = self.terminal(self.state, action, sp)
 
+        gamma = 0.0 if t else 1.0
+
         self.state = sp
 
-        return (r, self.state, t)
+        return (r, self.state, t, { 'gamma': gamma })
 
     def setState(self, state: int):
         self.state = state

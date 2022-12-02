@@ -57,17 +57,17 @@ class TestRandomWalk(unittest.TestCase):
         s = env.start()
         self.assertEqual(s, 2)
 
-        r, s, t = env.step(1)
+        r, s, t, _ = env.step(1)
         self.assertEqual(s, 3)
         self.assertEqual(r, 0)
         self.assertEqual(t, False)
 
-        r, s, t = env.step(1)
+        r, s, t, _ = env.step(1)
         self.assertEqual(s, 4)
         self.assertEqual(r, 0)
         self.assertEqual(t, False)
 
-        r, s, t = env.step(1)
+        r, s, t, _ = env.step(1)
         self.assertEqual(s, 2)
         self.assertEqual(r, 1)
         self.assertEqual(t, True)

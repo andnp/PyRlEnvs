@@ -49,54 +49,53 @@ class TestBoyanChain(unittest.TestCase):
         s = env.start()
         self.assertEqual(s, 0)
 
-        r, sp, t = env.step(0)
+        r, sp, t, _ = env.step(0)
         self.assertEqual(r, -3)
         self.assertEqual(sp, 1)
         self.assertFalse(t)
 
-        r, sp, t = env.step(1)
+        r, sp, t, _ = env.step(1)
         self.assertEqual(r, -3)
         self.assertEqual(sp, 3)
         self.assertFalse(t)
 
-        r, sp, t = env.step(1)
+        r, sp, t, _ = env.step(1)
         self.assertEqual(r, -3)
         self.assertEqual(sp, 5)
         self.assertFalse(t)
 
-        r, sp, t = env.step(1)
+        r, sp, t, _ = env.step(1)
         self.assertEqual(r, -3)
         self.assertEqual(sp, 7)
         self.assertFalse(t)
 
-        r, sp, t = env.step(1)
+        r, sp, t, _ = env.step(1)
         self.assertEqual(r, -3)
         self.assertEqual(sp, 9)
         self.assertFalse(t)
 
-        r, sp, t = env.step(1)
+        r, sp, t, _ = env.step(1)
         self.assertEqual(r, -3)
         self.assertEqual(sp, 11)
         self.assertFalse(t)
 
-        r, sp, t = env.step(0)
+        r, sp, t, _ = env.step(0)
         self.assertEqual(r, -2)
         self.assertEqual(sp, 12)
         self.assertFalse(t)
 
-        r, sp, t = env.step(0)
+        r, sp, t, _ = env.step(0)
         self.assertEqual(r, 0)
         self.assertEqual(sp, 0)
         self.assertTrue(t)
-
 
     def test_transitionMatrix(self):
         P = BoyanChain.constructTransitionMatrix(behaviorPolicy)
 
         E = np.zeros((13, 13))
         for i in range(11):
-            E[i, i+1] = 0.5
-            E[i, i+2] = 0.5
+            E[i, i + 1] = 0.5
+            E[i, i + 2] = 0.5
 
         E[11, 12] = 1
         E[12, 0] = 1

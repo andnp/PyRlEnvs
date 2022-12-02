@@ -35,7 +35,7 @@ class TestCartpole(unittest.TestCase):
 
             a = np.random.choice(env.actions(s))
 
-            r, sp, t = env.step(a)
+            r, sp, t, _ = env.step(a)
             sp_gym, r_gym, t_gym, _, _ = gym_env.step(a)
 
             self.assertTrue(np.allclose(sp, sp_gym))

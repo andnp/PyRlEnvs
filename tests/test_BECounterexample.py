@@ -77,23 +77,23 @@ class TestBECounterexample(unittest.TestCase):
 
         s = env.start()
 
-        r, sp, t = env.step(0)
+        r, sp, t, _ = env.step(0)
         self.assertEqual(s, A)
         self.assertEqual(r, 0)
         self.assertEqual(sp, B)
         self.assertFalse(t)
 
-        r, sp, t = env.step(1)
+        r, sp, t, _ = env.step(1)
         self.assertEqual(r, 1)
         self.assertEqual(sp, A)
         self.assertFalse(t)
 
-        r, sp, t = env.step(1)
+        r, sp, t, _ = env.step(1)
         self.assertEqual(r, 0)
         self.assertEqual(sp, Bp)
         self.assertFalse(t)
 
-        r, sp, t = env.step(0)
+        r, sp, t, _ = env.step(0)
         self.assertEqual(r, -1)
         self.assertEqual(sp, B)
         self.assertFalse(t)
@@ -109,7 +109,7 @@ class TestBECounterexample(unittest.TestCase):
 
         self.assertTrue(np.allclose(P, expected))
 
-        P = BECounterexample.constructTransitionMatrix(behaviorPolicy, gamma = 0.9)
+        P = BECounterexample.constructTransitionMatrix(behaviorPolicy, gamma=0.9)
         expected = expected * 0.9
 
         self.assertTrue(np.allclose(P, expected))

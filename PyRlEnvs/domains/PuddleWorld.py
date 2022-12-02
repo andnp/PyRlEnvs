@@ -26,7 +26,7 @@ def puddleDist(
 
         # agent parameters
         pos: np.ndarray,
-    ) -> float:
+) -> float:
     u = (pos - tail)[axis] / length
 
     dist = 0.0
@@ -50,7 +50,7 @@ def buildPuddle(
         radius: float,
         length: float,
         axis: int,
-    ):
+):
 
     head_ = np.asarray(head)
     tail_ = np.asarray(tail)
@@ -118,14 +118,14 @@ class PuddleWorld(BaseEnvironment):
 
         n = self.rng.normal(scale=self.sigma)
 
-        if a == UP: #up
-            s[1] += (self.def_displacement+n)
-        elif a == DOWN: #down
-            s[1] -= (self.def_displacement+n)
-        elif a == RIGHT: #right
-            s[0] += (self.def_displacement+n)
-        elif a == LEFT: #left
-            s[0] -= (self.def_displacement+n)
+        if a == UP: # up
+            s[1] += (self.def_displacement + n)
+        elif a == DOWN: # down
+            s[1] -= (self.def_displacement + n)
+        elif a == RIGHT: # right
+            s[0] += (self.def_displacement + n)
+        elif a == LEFT: # left
+            s[0] -= (self.def_displacement + n)
         else:
             raise Exception()
 
@@ -143,5 +143,6 @@ class PuddleWorld(BaseEnvironment):
 
         t = self._terminal()
         r = self._reward(s, t)
+        gamma = 0.0 if t else 1.0
 
-        return (r, np.copy(self.state), t)
+        return (r, np.copy(self.state), t, {'gamma': gamma})

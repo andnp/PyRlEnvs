@@ -77,32 +77,32 @@ class TestGridWorld(unittest.TestCase):
         s = env.start()
         self.assertEqual(GridWorld.getCoords(s), (0, 0))
 
-        r, sp, t = env.step(2)
+        r, sp, t, _ = env.step(2)
         self.assertEqual(r, -1)
         self.assertEqual(GridWorld.getCoords(sp), (0, 0))
         self.assertEqual(t, False)
 
-        r, sp, t = env.step(0)
+        r, sp, t, _ = env.step(0)
         self.assertEqual(r, -1)
         self.assertEqual(GridWorld.getCoords(sp), (0, 1))
         self.assertEqual(t, False)
 
-        r, sp, t = env.step(0)
+        r, sp, t, _ = env.step(0)
         self.assertEqual(r, -1)
         self.assertEqual(GridWorld.getCoords(sp), (0, 2))
         self.assertEqual(t, False)
 
-        r, sp, t = env.step(0)
+        r, sp, t, _ = env.step(0)
         self.assertEqual(r, -1)
         self.assertEqual(GridWorld.getCoords(sp), (0, 2))
         self.assertEqual(t, False)
 
-        r, sp, t = env.step(1)
+        r, sp, t, _ = env.step(1)
         self.assertEqual(r, -1)
         self.assertEqual(GridWorld.getCoords(sp), (1, 2))
         self.assertEqual(t, False)
 
-        r, sp, t = env.step(1)
+        r, sp, t, _ = env.step(1)
         self.assertEqual(r, 1)
         self.assertEqual(GridWorld.getCoords(sp), (2, 2))
         self.assertEqual(t, True)
@@ -161,7 +161,7 @@ class TestGridWorld(unittest.TestCase):
         s = env.start()
         self.assertEqual(s, GridWorld.getState((0, 0)))
 
-        r, sp, t = env.step(1)
+        r, sp, t, _ = env.step(1)
         self.assertEqual(r, -1)
         self.assertEqual(t, False)
         self.assertEqual(sp, GridWorld.getState((0, 0)))
