@@ -4,3 +4,44 @@ name = "cz_conventional_commits"
 version = "1.1.0"
 tag_format = "$version"
 version_files = ["setup.py"]
+
+[tool.pdm]
+[[tool.pdm.source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "mypy",
+    "flake8",
+    "commitizen",
+    "pre-commit",
+    "twine",
+    "gym>=0.26.2",
+    "pygame>=2.1.2",
+]
+
+[tool.mypy]
+mypy_path = "typings"
+
+[project]
+name = "PyRlEnvs-andnp"
+version = "1.1.0"
+description = "A handful of fast environments for running RL experiments"
+authors = [
+    {name = "Andy Patterson", email = "andnpatterson@gmail.com"},
+]
+dependencies = [
+    "numpy>=1.23.5",
+    "numba>=0.56.4",
+    "scipy>=1.9.3",
+    "rlglue-andnp>=0.0.6",
+]
+requires-python = ">=3.8"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-pep517>=1.0.0"]
+build-backend = "pdm.pep517.api"

@@ -28,7 +28,7 @@ class TestCartpole(unittest.TestCase):
         seed = 0
         for step in range(5000):
             if step % 1000 == 0 or t:
-                s_gym = gym_env.reset(seed=seed)
+                s_gym, _ = gym_env.reset(seed=seed)
                 seed += 1
                 s = env.start()
                 env._state = s_gym
@@ -36,7 +36,7 @@ class TestCartpole(unittest.TestCase):
             a = np.random.choice(env.actions(s))
 
             r, sp, t = env.step(a)
-            sp_gym, r_gym, t_gym, _ = gym_env.step(a)
+            sp_gym, r_gym, t_gym, _, _ = gym_env.step(a)
 
             self.assertTrue(np.allclose(sp, sp_gym))
             self.assertEqual(r, r_gym)
