@@ -1,8 +1,10 @@
 from typing import Any
 import unittest
-import numpy as np
-from PyRlEnvs.domains.MountainCar import GymMountainCar, MountainCar
 import gym
+import numpy as np
+from RlGlue.rl_glue import RlGlue
+from PyRlEnvs.domains.MountainCar import GymMountainCar, MountainCar
+from tests._utils.toy_agent import ToyAgent
 
 np.random.seed(0)
 
@@ -122,3 +124,18 @@ class TestMountain(unittest.TestCase):
             self.assertEqual(t, t_gym)
 
             env._state = sp_gym
+
+    def test_rlglue(self):
+        env = GymMountainCar(0)
+        agent = ToyAgent(3)
+
+        glue = RlGlue(agent, env)
+
+        glue.start()
+        for _ in range(1000):
+            interaction = glue.step()
+            if interaction.t:
+                glue.start()
+
+        # dummy check to ensure we get this far
+        self.assertTrue(True)
