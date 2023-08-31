@@ -74,7 +74,8 @@ RandomWalk = buildRandomWalk(5)
 # not necessarily environment specific, but this is as good a place as any to store them
 @try2jit
 def _normRows(m: np.ndarray):
-    return (m.T / m.sum(axis=1)).T
+    sums = m.sum(axis=1)
+    return m / np.expand_dims(sums, 1)
 
 """
 Feature representations used in
