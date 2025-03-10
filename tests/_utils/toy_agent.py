@@ -1,6 +1,6 @@
 import numpy as np
 from typing import Any
-from RlGlue.agent import BaseAgent
+from rlglue.agent import BaseAgent
 
 class ToyAgent(BaseAgent):
     def __init__(self, actions: int):

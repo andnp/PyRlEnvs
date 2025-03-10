@@ -2,7 +2,7 @@ from typing import Any
 import unittest
 import gym
 import numpy as np
-from RlGlue.rl_glue import RlGlue
+from rlglue.rl_glue import rlglue
 from PyRlEnvs.domains.MountainCar import GymMountainCar, MountainCar
 from tests._utils.toy_agent import ToyAgent
 
@@ -129,7 +129,7 @@ class TestMountain(unittest.TestCase):
         env = GymMountainCar(0)
         agent = ToyAgent(3)
 
-        glue = RlGlue(agent, env)
+        glue = rlglue(agent, env)
 
         glue.start()
         for _ in range(1000):
