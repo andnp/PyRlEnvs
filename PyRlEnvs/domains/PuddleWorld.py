@@ -113,18 +113,18 @@ class PuddleWorld(BaseEnvironment):
         reward = -1 + self.puddle1(state) * -400 + self.puddle2(state) * -400
         return reward
 
-    def step(self, a):
+    def step(self, action):
         s = self.state
 
         n = self.rng.normal(scale=self.sigma)
 
-        if a == UP: # up
+        if action == UP: # up
             s[1] += (self.def_displacement + n)
-        elif a == DOWN: # down
+        elif action == DOWN: # down
             s[1] -= (self.def_displacement + n)
-        elif a == RIGHT: # right
+        elif action == RIGHT: # right
             s[0] += (self.def_displacement + n)
-        elif a == LEFT: # left
+        elif action == LEFT: # left
             s[0] -= (self.def_displacement + n)
         else:
             raise Exception()
@@ -145,4 +145,4 @@ class PuddleWorld(BaseEnvironment):
         r = self._reward(s, t)
         gamma = 0.0 if t else 1.0
 
-        return (r, np.copy(self.state), t, {'gamma': gamma})
+        return (self.state, r, t, False, {'gamma': gamma})

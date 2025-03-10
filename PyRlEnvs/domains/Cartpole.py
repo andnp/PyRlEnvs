@@ -126,7 +126,7 @@ class Cartpole(BaseEnvironment):
 
         self._state = sp
 
-        return (r, sp, t, {'gamma': gamma})
+        return (sp, r, t, False, {'gamma': gamma})
 
     def setState(self, state: np.ndarray):
         self._state = state.copy()
