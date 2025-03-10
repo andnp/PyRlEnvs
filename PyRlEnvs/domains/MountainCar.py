@@ -144,7 +144,7 @@ class MountainCar(BaseEnvironment):
 
         self._state = sp
 
-        return (r, sp.copy(), t, {'gamma': gamma})
+        return (sp.copy(), r, t, False, {'gamma': gamma})
 
     def setState(self, state: np.ndarray):
         self._state = state.copy()

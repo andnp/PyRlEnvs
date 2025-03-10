@@ -1,7 +1,6 @@
 from __future__ import annotations
 import numpy as np
 import rlglue
-from abc import abstractmethod
 from typing import Any
 
 
@@ -10,10 +9,8 @@ class BaseEnvironment(rlglue.BaseEnvironment):
         self._seed = seed
         self.rng = np.random.default_rng(seed)
 
-    @abstractmethod
     def setState(self, state: Any):
-        pass
+        raise NotImplementedError
 
-    @abstractmethod
     def copy(self) -> BaseEnvironment:
-        pass
+        raise NotImplementedError

@@ -10,3 +10,4 @@ env/
 dist/
 PyRlEnvs_andnp*
 test.py
+uv.lock
