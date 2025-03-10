@@ -1,7 +1,7 @@
 [tool]
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "2.0.1"
+version = "2.0.2"
 tag_format = "$version"
 version_files = ["pyproject.toml"]
 
@@ -13,7 +13,7 @@ packages = ["PyRlEnvs"]
 
 [project]
 name = "PyRlEnvs-andnp"
-version = "2.0.1"
+version = "2.0.2"
 description = "A handful of fast environments for running RL experiments"
 authors = [
     {name = "Andy Patterson", email = "andnpatterson@gmail.com"},
