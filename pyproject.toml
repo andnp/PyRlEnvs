@@ -5,25 +5,11 @@ version = "2.0.1"
 tag_format = "$version"
 version_files = ["pyproject.toml"]
 
-[tool.pdm]
-[[tool.pdm.source]]
-url = "https://pypi.org/simple"
-verify_ssl = true
-name = "pypi"
-
-[tool.pdm.dev-dependencies]
-dev = [
-    "mypy",
-    "flake8",
-    "commitizen",
-    "pre-commit",
-    "twine",
-    "gym>=0.26.2",
-    "pygame>=2.1.2",
-]
-
 [tool.mypy]
 mypy_path = "typings"
+
+[tool.hatch.build.targets.wheel]
+packages = ["PyRlEnvs"]
 
 [project]
 name = "PyRlEnvs-andnp"
@@ -42,6 +28,17 @@ requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "MIT"}
 
+[dependency-groups]
+dev = [
+    "mypy",
+    "flake8",
+    "commitizen",
+    "pre-commit",
+    "twine",
+    "gym>=0.26.2",
+    "pygame>=2.1.2",
+]
+
 [build-system]
-requires = ["pdm-pep517>=1.0.0"]
-build-backend = "pdm.pep517.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
